@@ -11,6 +11,7 @@ A full-stack web application that detects the Shopify theme used by any store UR
 - **Link Validation**: Checks if theme URLs are accessible, shows warning for broken links
 - **Store Screenshots**: Generates and displays actual screenshots of the detected Shopify store with caching for popular stores
 - **Smooth Animated Hit Counter**: Displays randomly generated usage statistics with buttery-smooth counting animation using requestAnimationFrame and easing functions (200-800 themes) in American timezone hours
+- **Modern Animated Search Icon**: Features a sleek SVG search icon with loading animations including rotating circle, pulsing effects, and smooth transitions during theme detection
 - **Smart Theme Suggestions**: Context-aware alternatives grouped by style, category, and similarity
 - **Enhanced Edge Case Handling**: Password protection, maintenance mode, and custom theme detection
 - **Responsive Design**: Works perfectly on all devices

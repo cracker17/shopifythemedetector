@@ -140,16 +140,28 @@ export default function Home() {
             <button
               onClick={handleDetect}
               disabled={loading || !url.trim()}
-              className={styles.button}
+              className={`${styles.button} ${loading ? styles.loading : ''}`}
             >
               {loading ? (
                 <>
+                  <div className={styles.searchIcon}>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <circle cx="11" cy="11" r="8" stroke="currentColor" strokeWidth="2" className={styles.searchCircle}></circle>
+                      <path d="m21 21-4.35-4.35" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={styles.searchLine}></path>
+                    </svg>
+                  </div>
+                  <span className={styles.loadingText}>Detecting...</span>
                   <div className={styles.spinner}></div>
-                  Detecting...
                 </>
               ) : (
                 <>
-                  🔍 Detect Theme
+                  <div className={styles.searchIcon}>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <circle cx="11" cy="11" r="8" stroke="currentColor" strokeWidth="2"></circle>
+                      <path d="m21 21-4.35-4.35" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path>
+                    </svg>
+                  </div>
+                  <span>Detect Theme</span>
                 </>
               )}
             </button>
