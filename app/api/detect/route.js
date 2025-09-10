@@ -148,6 +148,40 @@ const themeSuggestions = {
   'Theme not detected': ['Dawn', 'Sense', 'Craft', 'Impulse', 'Local'],
 };
 
+// Enhanced theme detection utility function
+function detectThemeData(html) {
+  let themeName = null;
+  let themeStoreId = null;
+  let themeVersion = null;
+
+  // Primary: Shopify.theme object
+  const shopifyMatch = html.match(/Shopify\.theme\s*=\s*{[^}]*"name"\s*:\s*"([^"]+)"[^}]*"theme_store_id"\s*:\s*(\d+)/);
+  if (shopifyMatch) {
+    themeName = shopifyMatch[1];
+    themeStoreId = shopifyMatch[2];
+  }
+
+  // Secondary: schema_name / schema_version
+  if (!themeName) {
+    const schemaNameMatch = html.match(/schema_name["']?\s*:\s*["']([^"']+)["']/);
+    if (schemaNameMatch) themeName = schemaNameMatch[1];
+  }
+  const schemaVersionMatch = html.match(/schema_version["']?\s*:\s*["']([^"']+)["']/);
+  if (schemaVersionMatch) themeVersion = schemaVersionMatch[1];
+
+  // Attribute-based: data-theme-name / data-theme-version
+  if (!themeName) {
+    const dataNameMatch = html.match(/data-theme-name=["']([^"']+)["']/);
+    if (dataNameMatch) themeName = dataNameMatch[1];
+  }
+  if (!themeVersion) {
+    const dataVersionMatch = html.match(/data-theme-version=["']([^"']+)["']/);
+    if (dataVersionMatch) themeVersion = dataVersionMatch[1];
+  }
+
+  return { themeName, themeStoreId, themeVersion };
+}
+
 export async function POST(request) {
   try {
     const { url } = await request.json();
@@ -255,103 +289,69 @@ export async function POST(request) {
     // Initialize theme version
     let themeVersion = null;
 
-    // Extract theme information from parsed object (PRIMARY METHOD)
+    // Enhanced Detection Logic with Priority Order
+
+    // 1. PRIMARY DETECTION: Shopify.theme object (most reliable)
     if (themeObj) {
       if (themeObj.name) {
         themeName = themeObj.name;
       }
 
-      // Prioritize theme_store_id, fallback to id
       if (themeObj.theme_store_id) {
         themeStoreId = themeObj.theme_store_id;
       } else if (themeObj.id) {
         themeStoreId = themeObj.id;
       }
 
-      // Extract version if available
       if (themeObj.version) {
         themeVersion = themeObj.version;
       }
 
-      console.log('Successfully detected theme object (Primary):', {
+      console.log('✅ Primary Detection (Shopify.theme):', {
         name: themeName,
         themeStoreId,
         version: themeVersion
       });
-    } else {
-      // SECONDARY METHOD: Look for schema_name and schema_version
-      console.log('Theme object not found, trying secondary detection methods');
+    }
 
-      // Look for schema_name (from settings_schema.json or inline scripts)
-      const schemaNamePatterns = [
-        /schema_name["']?\s*:\s*["']([^"']+)["']/,
-        /"schema_name"\s*:\s*["']([^"']+)["']/,
-        /'schema_name'\s*:\s*['"]([^'"]+)['"]/,
-        /schema_name\s*=\s*["']([^"']+)["']/,
-      ];
-
-      for (const pattern of schemaNamePatterns) {
-        const match = html.match(pattern);
-        if (match && match[1]) {
-          themeName = match[1];
-          console.log('Found schema_name (Secondary):', themeName);
-          break;
-        }
+    // 2. SECONDARY DETECTION: schema_name and schema_version (fallbacks)
+    if (!themeName) {
+      // Look for schema_name
+      const schemaNameMatch = html.match(/schema_name["']?\s*:\s*["']([^"']+)["']/);
+      if (schemaNameMatch) {
+        themeName = schemaNameMatch[1];
+        console.log('📋 Secondary Detection (schema_name):', themeName);
       }
+    }
 
-      // Look for schema_version
-      const schemaVersionPatterns = [
-        /schema_version["']?\s*:\s*["']([^"']+)["']/,
-        /"schema_version"\s*:\s*["']([^"']+)["']/,
-        /'schema_version'\s*:\s*['"]([^'"]+)['"]/,
-        /schema_version\s*=\s*["']([^"']+)["']/,
-      ];
-
-      for (const pattern of schemaVersionPatterns) {
-        const match = html.match(pattern);
-        if (match && match[1]) {
-          themeVersion = match[1];
-          console.log('Found schema_version (Secondary):', themeVersion);
-          break;
-        }
+    // Look for schema_version (can be combined with any detection method)
+    if (!themeVersion) {
+      const schemaVersionMatch = html.match(/schema_version["']?\s*:\s*["']([^"']+)["']/);
+      if (schemaVersionMatch) {
+        themeVersion = schemaVersionMatch[1];
+        console.log('📋 Secondary Detection (schema_version):', themeVersion);
       }
+    }
 
-      // TERTIARY METHOD: Look for data attributes in DOM
-      if (!themeName) {
-        // Look for data-theme-name attributes
-        const dataThemeNamePatterns = [
-          /data-theme-name=["']([^"']+)["']/,
-          /data-theme-name\s*=\s*["']([^"']+)["']/,
-        ];
-
-        for (const pattern of dataThemeNamePatterns) {
-          const match = html.match(pattern);
-          if (match && match[1]) {
-            themeName = match[1];
-            console.log('Found data-theme-name (Tertiary):', themeName);
-            break;
-          }
-        }
+    // 3. TERTIARY DETECTION: data attributes (last resort)
+    if (!themeName) {
+      const dataNameMatch = html.match(/data-theme-name=["']([^"']+)["']/);
+      if (dataNameMatch) {
+        themeName = dataNameMatch[1];
+        console.log('🏷️ Tertiary Detection (data-theme-name):', themeName);
       }
+    }
 
-      if (!themeVersion) {
-        // Look for data-theme-version attributes
-        const dataThemeVersionPatterns = [
-          /data-theme-version=["']([^"']+)["']/,
-          /data-theme-version\s*=\s*["']([^"']+)["']/,
-        ];
-
-        for (const pattern of dataThemeVersionPatterns) {
-          const match = html.match(pattern);
-          if (match && match[1]) {
-            themeVersion = match[1];
-            console.log('Found data-theme-version (Tertiary):', themeVersion);
-            break;
-          }
-        }
+    if (!themeVersion) {
+      const dataVersionMatch = html.match(/data-theme-version=["']([^"']+)["']/);
+      if (dataVersionMatch) {
+        themeVersion = dataVersionMatch[1];
+        console.log('🏷️ Tertiary Detection (data-theme-version):', themeVersion);
       }
+    }
 
-      // Look for theme_store_id using expanded patterns
+    // Additional theme_store_id detection (can work with any method)
+    if (!themeStoreId) {
       const idPatterns = [
         /Shopify\.theme\.theme_store_id\s*=\s*["']?([^"'\s,;}]+)["']?/,
         /"theme_store_id"\s*:\s*["']?([^"'\s,;}]+)["']?/,
@@ -364,7 +364,7 @@ export async function POST(request) {
         const match = html.match(pattern);
         if (match && match[1]) {
           themeStoreId = match[1].replace(/["']/g, '');
-          console.log('Found theme_store_id:', themeStoreId);
+          console.log('🔗 Found theme_store_id:', themeStoreId);
           break;
         }
       }

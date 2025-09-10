@@ -108,8 +108,13 @@ Response:
 
 ### Detection Priority Order
 1. **Primary**: `Shopify.theme` object (most reliable)
-2. **Secondary**: `schema_name` and `schema_version` from theme config
-3. **Tertiary**: `data-theme-name` and `data-theme-version` DOM attributes
+   - Extracts `name` → Theme Name
+   - Extracts `theme_store_id` → Direct link to Theme Store
+2. **Secondary**: `schema_name` and `schema_version` (fallbacks)
+   - `schema_name` → Alternative theme name source
+   - `schema_version` → Theme version number
+3. **Tertiary**: `data-theme-name` and `data-theme-version` (last resort)
+   - Scans `<html>` and `<body>` tags for data attributes
 
 ### Advanced Pattern Matching
 - **Schema Detection**: `schema_name["']?\s*:\s*["']([^"']+)["']`
@@ -121,6 +126,51 @@ Response:
 - Theme version appears directly under the theme name in the UI
 - Extracted from multiple sources for maximum compatibility
 - Only displayed when version information is available
+
+### Node.js Detection Implementation
+
+```javascript
+function detectThemeData(html) {
+  let themeName = null;
+  let themeStoreId = null;
+  let themeVersion = null;
+
+  // Primary: Shopify.theme object
+  const shopifyMatch = html.match(/Shopify\.theme\s*=\s*{[^}]*"name"\s*:\s*"([^"]+)"[^}]*"theme_store_id"\s*:\s*(\d+)/);
+  if (shopifyMatch) {
+    themeName = shopifyMatch[1];
+    themeStoreId = shopifyMatch[2];
+  }
+
+  // Secondary: schema_name / schema_version
+  if (!themeName) {
+    const schemaNameMatch = html.match(/schema_name["']?\s*:\s*["']([^"']+)["']/);
+    if (schemaNameMatch) themeName = schemaNameMatch[1];
+  }
+  const schemaVersionMatch = html.match(/schema_version["']?\s*:\s*["']([^"']+)["']/);
+  if (schemaVersionMatch) themeVersion = schemaVersionMatch[1];
+
+  // Attribute-based: data-theme-name / data-theme-version
+  if (!themeName) {
+    const dataNameMatch = html.match(/data-theme-name=["']([^"']+)["']/);
+    if (dataNameMatch) themeName = dataNameMatch[1];
+  }
+  if (!themeVersion) {
+    const dataVersionMatch = html.match(/data-theme-version=["']([^"']+)["']/);
+    if (dataVersionMatch) themeVersion = dataVersionMatch[1];
+  }
+
+  return { themeName, themeStoreId, themeVersion };
+}
+```
+
+### UI Output Example
+
+```
+Theme: Dawn
+Version: 9.0.0
+Link: https://themes.shopify.com/themes/887
+```
 
 ## Technologies Used
 
