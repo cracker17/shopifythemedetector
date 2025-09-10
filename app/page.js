@@ -22,10 +22,13 @@ export default function Home() {
     document.documentElement.setAttribute('data-theme', savedTheme);
   }, []);
 
-  // Clear platform notification when URL changes
+  // Clear all results when URL changes
   useEffect(() => {
     if (url) {
+      setResult(null);
       setPlatform(null);
+      setThemeVersion(null);
+      setError('');
     }
   }, [url]);
 

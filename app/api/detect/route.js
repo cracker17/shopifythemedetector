@@ -236,13 +236,17 @@ const platformSignatures = {
   },
   'Shopify': {
     patterns: [
-      /shopify/i,
       /Shopify\.theme/i,
       /cdn\.shopify\.com/i,
-      /myshopify\.com/i
+      /shopifycdn\.com/i,
+      /myshopify\.com/i,
+      /shopify\.com/i,
+      /shopify/i,
+      /schema_name/i,
+      /schema_version/i
     ],
-    scripts: ['shopify'],
-    icon: '<i class="fas fa-shopping-cart"></i>'
+    scripts: ['shopify', 'cdn.shopify.com'],
+    icon: '<i class="fab fa-shopify"></i>'
   },
   'Drupal': {
     patterns: [
@@ -323,11 +327,31 @@ const platformSignatures = {
   }
 };
 
-// Platform detection function
+// Platform detection function with Shopify priority
 function detectPlatform(html, headers = {}) {
   const htmlLower = html.toLowerCase();
 
+  // First, check for Shopify-specific patterns (highest priority)
+  const shopifySignatures = platformSignatures['Shopify'];
+  if (shopifySignatures.patterns) {
+    for (const pattern of shopifySignatures.patterns) {
+      if (pattern.test(htmlLower)) {
+        // Additional check for Shopify.theme object to confirm it's actually Shopify
+        if (html.includes('Shopify.theme') || html.includes('schema_name') || html.includes('schema_version')) {
+          return {
+            name: 'Shopify',
+            icon: shopifySignatures.icon,
+            confidence: 'high'
+          };
+        }
+      }
+    }
+  }
+
+  // Check for other platforms
   for (const [platform, signatures] of Object.entries(platformSignatures)) {
+    if (platform === 'Shopify') continue; // Already checked above
+
     // Check HTML patterns
     if (signatures.patterns) {
       for (const pattern of signatures.patterns) {
@@ -542,9 +566,9 @@ export async function POST(request) {
     let themeStoreLink = null;
     let themeImage = null;
 
-    // Detect platform/CMS
-    const platform = detectPlatform(html, Object.fromEntries(response.headers.entries()));
-    console.log('🔍 Platform Detection:', platform);
+    // Detect platform/CMS with Shopify priority
+    let platform = detectPlatform(html, Object.fromEntries(response.headers.entries()));
+    console.log('🔍 Initial Platform Detection:', platform);
 
     // Enhanced Detection Logic with Priority Order (Schema-first approach)
 
@@ -668,6 +692,21 @@ export async function POST(request) {
     } else if (isMaintenanceMode) {
       themeName = 'Store is in maintenance mode';
       themeStoreLink = null;
+    }
+
+    // Override platform detection if Shopify theme is detected
+    const isShopifyStore = themeName !== 'Not a Shopify store' &&
+                          themeName !== 'Store is password protected' &&
+                          themeName !== 'Store is in maintenance mode' &&
+                          themeName !== 'Theme not detected';
+
+    if (isShopifyStore) {
+      platform = {
+        name: 'Shopify',
+        icon: '<i class="fab fa-shopify"></i>',
+        confidence: 'high'
+      };
+      console.log('🔄 Platform overridden to Shopify due to theme detection');
     }
 
     // Theme store link - generate using schema_name (theme name) in lowercase
