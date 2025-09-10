@@ -642,6 +642,8 @@ export async function POST(request) {
     let themeVersion = null;
     let themeStoreLink = null;
     let themeImage = null;
+    let faviconUrl = null;
+    let metaTitle = null;
 
     // Detect platform/CMS with Shopify priority
     let platform = detectPlatform(html, Object.fromEntries(response.headers.entries()));
@@ -857,18 +859,16 @@ export async function POST(request) {
       }
   
       // Fetch favicon and meta title for preview
-      let faviconUrl = null;
-      let metaTitle = null;
       try {
         console.log('🔍 Fetching favicon and meta title for:', url);
-  
+
         // Extract domain for favicon
         const urlObj = new URL(url);
         const domain = urlObj.hostname;
-  
+
         // Generate favicon URL using Google service
         faviconUrl = `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
-  
+
         // Fetch meta title from the website
         try {
           const titleResponse = await fetch(url, {
@@ -878,7 +878,7 @@ export async function POST(request) {
             },
             timeout: 5000,
           });
-  
+
           if (titleResponse.ok) {
             const html = await titleResponse.text();
             const titleMatch = html.match(/<title[^>]*>([^<]+)<\/title>/i);
@@ -890,7 +890,7 @@ export async function POST(request) {
         } catch (titleError) {
           console.log('⚠️ Could not fetch meta title:', titleError.message);
         }
-  
+
         console.log('🖼️ Generated favicon URL:', faviconUrl);
       } catch (faviconError) {
         console.log('⚠️ Favicon generation failed:', faviconError.message);
