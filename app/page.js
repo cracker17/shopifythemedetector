@@ -211,44 +211,44 @@ export default function Home() {
               <div className={styles.themeInfo}>
                 <div className={styles.themeHeader}>
                   <div className={styles.themeImageContainer}>
-                    {result.themeImage ? (
-                      <>
-                        <img
-                          src={result.themeImage}
-                          alt={`${result.themeName} live preview`}
-                          className={styles.themeImage}
-                          onLoad={(e) => {
-                            // Image loaded successfully - hide placeholder
-                            e.target.style.display = 'block';
-                            e.target.nextElementSibling.style.display = 'none';
-                          }}
-                          onError={(e) => {
-                            // Image failed to load - show placeholder
-                            e.target.style.display = 'none';
-                            e.target.nextElementSibling.style.display = 'flex';
-                          }}
-                        />
-                        <div
-                          className={styles.imagePlaceholder}
-                          style={{ display: 'none' }} // Initially hidden, shown on error
-                        >
+                    {/* Loading placeholder initially shown */}
+                    <div className={styles.imagePlaceholder} style={{ display: 'flex' }}>
+                      <div className={styles.loadingSpinner}></div>
+                      <span>Generating Preview...</span>
+                    </div>
+
+                    <img
+                      id="site-preview"
+                      src={`https://screenshotone.com/tools/website-screenshot/?url=${encodeURIComponent(url)}`}
+                      alt="Website Preview"
+                      className={styles.themeImage}
+                      onLoad={(e) => {
+                        // Image loaded successfully - hide placeholder
+                        e.target.style.display = 'block';
+                        e.target.previousElementSibling.style.display = 'none';
+                      }}
+                      onError={(e) => {
+                        // Image failed to load - show error placeholder
+                        e.target.style.display = 'none';
+                        const placeholder = e.target.previousElementSibling;
+                        placeholder.innerHTML = `
                           <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M4 4h16v16H4V4zm2 2v12h12V6H6zm2 2h8v8H8V8zm2 2v4h4v-4h-4z" fill="currentColor" opacity="0.3"/>
                             <path d="M6 6l12 12M18 6l-12 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
                           </svg>
                           <span>Preview Unavailable</span>
-                        </div>
-                      </>
-                    ) : (
-                      <div className={styles.imagePlaceholder}>
-                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M4 4h16v16H4V4zm2 2v12h12V6H6zm2 2h8v8H8V8zm2 2v4h4v-4h-4z" fill="currentColor" opacity="0.3"/>
-                          <path d="M6 6l12 12M18 6l-12 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-                        </svg>
-                        <span>Generating Preview...</span>
-                      </div>
-                    )}
-                  </div>
+                        `;
+                        placeholder.style.display = 'flex';
+                      }}
+                      style={{
+                        width: '100%',
+                        maxWidth: '600px',
+                        border: '1px solid #ccc',
+                        borderRadius: '8px',
+                        display: 'none' // Initially hidden
+                      }}
+                    />
+                </div>
                   <div className={styles.themeDetails}>
                     <div className={styles.themeName}>
                       <span className={styles.label}>
