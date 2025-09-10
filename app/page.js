@@ -253,30 +253,11 @@ export default function Home() {
               <div className={styles.themeInfo}>
                 <div className={styles.themeHeader}>
                   <div className={styles.themeImageContainer}>
-                      {/* Matrix Text Animation */}
-                      <div className={styles.matrixText}>
-                        <span className={styles.matrixChar}>W</span>
-                        <span className={styles.matrixChar}>e</span>
-                        <span className={styles.matrixChar}>b</span>
-                        <span className={styles.matrixChar}>s</span>
-                        <span className={styles.matrixChar}>i</span>
-                        <span className={styles.matrixChar}>t</span>
-                        <span className={styles.matrixChar}>e</span>
-                        <span className={styles.matrixChar}>&nbsp;</span>
-                        <span className={styles.matrixChar}>P</span>
-                        <span className={styles.matrixChar}>r</span>
-                        <span className={styles.matrixChar}>e</span>
-                        <span className={styles.matrixChar}>v</span>
-                        <span className={styles.matrixChar}>i</span>
-                        <span className={styles.matrixChar}>e</span>
-                        <span className={styles.matrixChar}>w</span>
-                      </div>
- 
-                      {/* Loading placeholder initially shown */}
-                      <div className={styles.imagePlaceholder} style={{ display: 'flex' }}>
-                        <div className={styles.loadingSpinner}></div>
-                        <span>Generating Preview...</span>
-                      </div>
+                    {/* Loading placeholder initially shown */}
+                    <div className={styles.imagePlaceholder} style={{ display: 'flex' }}>
+                      <div className={styles.loadingSpinner}></div>
+                      <span>Generating Preview...</span>
+                    </div>
 
                     {/* Favicon and Meta Title Preview - Always shown as overlay */}
                     <div className={styles.faviconPreview} style={{ display: 'flex' }}>
