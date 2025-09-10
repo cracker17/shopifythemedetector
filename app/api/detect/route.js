@@ -440,21 +440,31 @@ export async function POST(request) {
         themeStoreLink = null;
       }
 
-      // Generate store screenshot using a screenshot service
+      // Generate store screenshot using our dedicated screenshot API
       try {
-        // Using ScreenshotOne API for store screenshots (free tier available)
-        const screenshotApiUrl = `https://api.screenshotone.com/take?url=${encodeURIComponent(url)}&viewport_width=1280&viewport_height=720&image_quality=80&format=jpg&cache=true&delay=2&full_page=false&block_cookie_banners=true&block_chats=true&block_ads=true`;
+        console.log('📸 Requesting screenshot for:', url);
 
-        // For demo purposes, we'll use a placeholder that represents the store screenshot
-        // In production, replace with actual screenshot service
-        themeImage = `https://via.placeholder.com/800x450/0070f3/ffffff?text=Screenshot+of+${encodeURIComponent(url.replace('https://', '').replace('http://', ''))}`;
+        const screenshotResponse = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/screenshot`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ url }),
+        });
 
-        console.log('📸 Generated Store Screenshot:', themeImage);
+        if (screenshotResponse.ok) {
+          const screenshotData = await screenshotResponse.json();
+          themeImage = screenshotData.screenshotUrl;
+          console.log('📸 Generated Store Screenshot:', themeImage);
+          if (screenshotData.cached) {
+            console.log('⚡ Screenshot served from cache');
+          }
+        } else {
+          throw new Error('Screenshot API failed');
+        }
       } catch (screenshotError) {
         console.log('⚠️ Screenshot generation failed:', screenshotError.message);
-        // Fallback to theme preview image
-        themeImage = `https://cdn.shopify.com/shopifycloud/theme-store/themes/${themeSlug}/preview.jpg`;
-        console.log('🖼️ Fallback to Theme Preview Image:', themeImage);
+        // Fallback to a working screenshot service
+        themeImage = `https://api.screenshotone.com/take?url=${encodeURIComponent(url)}&viewport_width=1280&viewport_height=720&image_quality=80&format=jpg&cache=true&delay=2&full_page=false&block_cookie_banners=true&block_chats=true&block_ads=true`;
+        console.log('🔄 Using fallback screenshot service:', themeImage);
       }
     }
 

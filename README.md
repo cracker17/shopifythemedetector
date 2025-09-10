@@ -9,7 +9,7 @@ A full-stack web application that detects the Shopify theme used by any store UR
 - **Comprehensive Theme Library**: 100+ themes with intelligent suggestions based on Shopify's sitemap
 - **Direct Theme Links**: Automatic linking to `https://themes.shopify.com/themes/{theme-name}` (lowercase)
 - **Link Validation**: Checks if theme URLs are accessible, shows warning for broken links
-- **Store Screenshots**: Generates and displays actual screenshots of the detected Shopify store
+- **Store Screenshots**: Generates and displays actual screenshots of the detected Shopify store with caching for popular stores
 - **Smart Theme Suggestions**: Context-aware alternatives grouped by style, category, and similarity
 - **Enhanced Edge Case Handling**: Password protection, maintenance mode, and custom theme detection
 - **Responsive Design**: Works perfectly on all devices
@@ -82,6 +82,8 @@ Shopify.theme = {
 
 ## API
 
+### Theme Detection API
+
 The app provides an API endpoint at `/api/detect` that accepts POST requests with JSON body:
 
 ```json
@@ -97,10 +99,35 @@ Response:
   "themeName": "Dawn",
   "themeVersion": "9.0.0",
   "themeStoreLink": "https://themes.shopify.com/themes/dawn",
-  "themeImage": "https://via.placeholder.com/800x450/0070f3/ffffff?text=Screenshot+of+example-shopify-store.com",
+  "themeImage": "https://api.screenshotone.com/take?url=https%3A//example-shopify-store.com&viewport_width=1280&viewport_height=720&image_quality=80&format=jpg&cache=true&delay=2&full_page=false&block_cookie_banners=true&block_chats=true&block_ads=true",
   "suggestions": ["Impulse", "Prestige", "Local", "Sense", "Craft"]
 }
 ```
+
+### Screenshot API
+
+The app also provides a dedicated screenshot API at `/api/screenshot` for generating store screenshots with caching:
+
+```json
+{
+  "url": "https://example-shopify-store.com"
+}
+```
+
+Response:
+
+```json
+{
+  "screenshotUrl": "https://api.screenshotone.com/take?url=https%3A//example-shopify-store.com&viewport_width=1280&viewport_height=720&image_quality=80&format=jpg&cache=true&delay=2&full_page=false&block_cookie_banners=true&block_chats=true&block_ads=true",
+  "cached": false
+}
+```
+
+#### Caching Features
+- **In-memory cache**: Stores screenshots for 1 hour
+- **Cache size limit**: Maximum 100 cached screenshots
+- **Automatic cleanup**: Removes oldest entries when limit reached
+- **Cache hit detection**: Returns cached results when available
 
 ### Response Fields
 - `themeName`: Detected theme name or status message
