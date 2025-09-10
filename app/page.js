@@ -324,11 +324,27 @@ export default function Home() {
                         const placeholder = e.target.parentElement.querySelector(`.${styles.imagePlaceholder}`);
                         if (placeholder) {
                           placeholder.innerHTML = `
-                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                              <path d="M4 4h16v16H4V4zm2 2v12h12V6H6zm2 2h8v8H8V8zm2 2v4h4v-4h-4z" fill="currentColor" opacity="0.3"/>
-                              <path d="M6 6l12 12M18 6l-12 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-                            </svg>
-                            <span>Screenshot Unavailable</span>
+                            <div class="${styles.browserMockup}">
+                              <div class="${styles.browserHeader}">
+                                <div class="${styles.browserControls}">
+                                  <div class="${styles.browserButton} ${styles.close}"></div>
+                                  <div class="${styles.browserButton} ${styles.minimize}"></div>
+                                  <div class="${styles.browserButton} ${styles.maximize}"></div>
+                                </div>
+                                <div class="${styles.browserAddress}">
+                                  <div class="${styles.addressBar}">
+                                    <span class="${styles.addressIcon}">🔒</span>
+                                    <span class="${styles.addressText}">https://example.com</span>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="${styles.browserContent}">
+                                <div class="${styles.contentPlaceholder}">
+                                  <div class="${styles.placeholderIcon}">📷</div>
+                                  <div class="${styles.placeholderText}">Preview Unavailable</div>
+                                </div>
+                              </div>
+                            </div>
                           `;
                           placeholder.style.display = 'flex';
                         }
@@ -530,7 +546,6 @@ export default function Home() {
                 <div className={styles.codeContainer}>
                   <div className={styles.codeBlock}>
                     <div className={styles.codeHeader}>
-                      <span className={styles.codeLanguage}>HTML</span>
                       <button
                         onClick={() => {
                           navigator.clipboard.writeText('<script src="https://shopifythemedetector.vercel.app/shopify-theme-detector.js"></script>');
