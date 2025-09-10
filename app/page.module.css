@@ -798,25 +798,12 @@
   padding: 1.5rem;
   margin-bottom: 2rem;
   box-shadow: 0 4px 12px rgba(229, 62, 62, 0.3);
-  position: relative;
-  overflow: hidden;
-}
-
-.platformWarning::before {
-  content: '⚠️';
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  font-size: 1.5rem;
-  opacity: 0.8;
 }
 
 .platformContent {
   display: flex;
   align-items: center;
   gap: 1rem;
-  position: relative;
-  z-index: 1;
 }
 
 .platformIcon {
