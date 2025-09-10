@@ -771,24 +771,38 @@ export async function POST(request) {
       themeStoreLink = null;
     }
 
-    // Override platform detection if Shopify theme is detected
+    // Enhanced platform override logic - only override if initial detection was uncertain
     const isShopifyStore = themeName !== 'Not a Shopify store' &&
                           themeName !== 'Store is password protected' &&
                           themeName !== 'Store is in maintenance mode' &&
                           themeName !== 'Theme not detected';
 
     if (isShopifyStore) {
-      platform = {
-        name: 'Shopify',
-        cms: 'Shopify',
-        type: 'E-commerce Platform',
-        icon: '<i class="fab fa-shopify"></i>',
-        confidence: 'high',
-        message: 'Shopify e-commerce platform detected',
-        detectionScore: 5,
-        matchedPatterns: ['Shopify.theme', 'schema_name', 'schema_version']
-      };
-      console.log('🔄 Platform overridden to Shopify due to theme detection');
+      // Only override if initial platform detection was uncertain (Unknown or low confidence)
+      const shouldOverride = !platform ||
+                            platform.name === 'Unknown' ||
+                            platform.confidence === 'low' ||
+                            platform.confidence === 'none';
+
+      if (shouldOverride) {
+        platform = {
+          name: 'Shopify',
+          cms: 'Shopify',
+          type: 'E-commerce Platform',
+          icon: '<i class="fab fa-shopify"></i>',
+          confidence: 'high',
+          message: 'Shopify e-commerce platform detected',
+          detectionScore: 5,
+          matchedPatterns: ['Shopify.theme', 'schema_name', 'schema_version']
+        };
+        console.log('🔄 Platform overridden to Shopify due to theme detection');
+      } else {
+        // Conflict detected - keep original platform but add conflict note
+        platform.conflictDetected = true;
+        platform.shopifyThemeFound = true;
+        platform.message = `${platform.name} detected, but Shopify theme information was also found. This may indicate a custom integration or migration in progress.`;
+        console.log('⚠️ Platform conflict detected - keeping original platform detection');
+      }
     }
 
     // Theme store link - generate using schema_name (theme name) in lowercase

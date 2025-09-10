@@ -234,10 +234,13 @@ export default function Home() {
                   <div className={styles.themeDetails}>
                     <div className={styles.themeName}>
                       <span className={styles.label}>
-                        {result.themeName === 'Not a Shopify store' ? 'Status:' : 'Theme Name:'}
+                        {result.themeName === 'Not a Shopify store' ? 'Status:' :
+                         platform?.conflictDetected ? 'Detected Elements:' : 'Theme Name:'}
                       </span>
                       <span className={`${styles.value} ${result.themeName === 'Not a Shopify store' ? styles.errorText : ''}`}>
-                        {result.themeName}
+                        {platform?.conflictDetected ?
+                          `${platform.name} + Shopify Theme Elements` :
+                          result.themeName}
                       </span>
                     </div>
 
@@ -271,9 +274,9 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* Platform & CMS Detection Info - Only show for non-Shopify platforms */}
-              {platform && platform.name !== 'Unknown' && platform.name !== 'Shopify' && (
-                <div className={`${styles.platformInfo} ${platform.confidence === 'high' ? styles.confidenceHigh : platform.confidence === 'medium' ? styles.confidenceMedium : styles.confidenceLow}`}>
+              {/* Platform & CMS Detection Info - Show for all detected platforms */}
+              {platform && platform.name !== 'Unknown' && (
+                <div className={`${styles.platformInfo} ${platform.confidence === 'high' ? styles.confidenceHigh : platform.confidence === 'medium' ? styles.confidenceMedium : styles.confidenceLow} ${platform.conflictDetected ? styles.conflictDetected : ''}`}>
                   <div className={styles.platformContent}>
                     <span
                       className={styles.platformIcon}
@@ -297,6 +300,11 @@ export default function Home() {
                       {platform.confidence && platform.confidence !== 'high' && (
                         <div className={styles.confidenceText}>
                           Confidence: {platform.confidence}
+                        </div>
+                      )}
+                      {platform.conflictDetected && (
+                        <div className={styles.conflictNote}>
+                          <strong>Note:</strong> Shopify theme elements detected alongside {platform.name}. This may indicate a custom integration or migration.
                         </div>
                       )}
                     </div>
@@ -328,7 +336,7 @@ export default function Home() {
                 </div>
               )}
 
-              {result.suggestions.length > 0 && result.themeName !== 'Not a Shopify store' && (
+              {result.suggestions.length > 0 && result.themeName !== 'Not a Shopify store' && !platform?.conflictDetected && (
                 <div className={styles.suggestions}>
                   <h4>💡 Suggested Alternatives</h4>
                   <div className={styles.suggestionGrid}>
@@ -345,6 +353,24 @@ export default function Home() {
                         </div>
                       </a>
                     ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Show platform-specific suggestions when there's a conflict */}
+              {platform?.conflictDetected && (
+                <div className={styles.suggestions}>
+                  <h4>💡 Platform Integration Options</h4>
+                  <div className={styles.suggestionGrid}>
+                    <div className={styles.suggestion}>
+                      <strong>Consider:</strong>
+                      <ul style={{margin: '0.5rem 0', paddingLeft: '1rem'}}>
+                        <li>Custom {platform.name} + Shopify integration</li>
+                        <li>Migration to pure Shopify</li>
+                        <li>Headless commerce setup</li>
+                        <li>Consult with a developer</li>
+                      </ul>
+                    </div>
                   </div>
                 </div>
               )}

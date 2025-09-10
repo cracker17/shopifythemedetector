@@ -922,6 +922,22 @@
   box-shadow: 0 2px 4px rgba(0, 123, 255, 0.3);
 }
 
+/* Conflict detection styling */
+.conflictDetected {
+  border-color: #856404;
+  background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+}
+
+.conflictNote {
+  font-size: 0.85rem;
+  color: #856404;
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  background: rgba(255, 193, 7, 0.1);
+  border-radius: 4px;
+  border-left: 3px solid #ffc107;
+}
+
 /* Confidence level styling */
 .confidenceHigh {
   border-color: #28a745;
