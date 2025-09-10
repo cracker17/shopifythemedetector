@@ -15,6 +15,7 @@ export default function Home() {
   const [animatedCounter, setAnimatedCounter] = useState(0);
   const [hoursSinceMidnight, setHoursSinceMidnight] = useState(0);
   const [platform, setPlatform] = useState(null);
+  const [imageLoading, setImageLoading] = useState(false);
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme') || 'light';
@@ -93,6 +94,7 @@ export default function Home() {
 
     // Clear all previous state before starting new detection
     setLoading(true);
+    setImageLoading(true);
     setError('');
     setResult(null);
     setThemeVersion(null);
@@ -121,8 +123,10 @@ export default function Home() {
     } catch (err) {
       setError('Network error');
       setPlatform(null); // Clear platform on network error
+      setImageLoading(false); // Clear image loading on error
     }
     setLoading(false);
+    setImageLoading(false); // Clear image loading when detection completes
   };
 
   return (
@@ -206,31 +210,45 @@ export default function Home() {
 
               <div className={styles.themeInfo}>
                 <div className={styles.themeHeader}>
-                  {(result.themeImage || (result.themeName !== 'Not a Shopify store' && result.themeName !== 'Store is password protected' && result.themeName !== 'Store is in maintenance mode' && result.themeName !== 'Custom Theme')) && (
-                    <div className={styles.themeImageContainer}>
-                      {result.themeImage ? (
+                  <div className={styles.themeImageContainer}>
+                    {result.themeImage ? (
+                      <>
                         <img
                           src={result.themeImage}
-                          alt={`${result.themeName} theme preview`}
+                          alt={`${result.themeName} live preview`}
                           className={styles.themeImage}
+                          onLoad={(e) => {
+                            // Image loaded successfully - hide placeholder
+                            e.target.style.display = 'block';
+                            e.target.nextElementSibling.style.display = 'none';
+                          }}
                           onError={(e) => {
+                            // Image failed to load - show placeholder
                             e.target.style.display = 'none';
                             e.target.nextElementSibling.style.display = 'flex';
                           }}
                         />
-                      ) : null}
-                      <div
-                        className={styles.imagePlaceholder}
-                        style={{ display: result.themeImage ? 'none' : 'flex' }}
-                      >
+                        <div
+                          className={styles.imagePlaceholder}
+                          style={{ display: 'none' }} // Initially hidden, shown on error
+                        >
+                          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M4 4h16v16H4V4zm2 2v12h12V6H6zm2 2h8v8H8V8zm2 2v4h4v-4h-4z" fill="currentColor" opacity="0.3"/>
+                            <path d="M6 6l12 12M18 6l-12 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                          </svg>
+                          <span>Preview Unavailable</span>
+                        </div>
+                      </>
+                    ) : (
+                      <div className={styles.imagePlaceholder}>
                         <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                           <path d="M4 4h16v16H4V4zm2 2v12h12V6H6zm2 2h8v8H8V8zm2 2v4h4v-4h-4z" fill="currentColor" opacity="0.3"/>
                           <path d="M6 6l12 12M18 6l-12 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
                         </svg>
-                        <span>Preview Unavailable</span>
+                        <span>Generating Preview...</span>
                       </div>
-                    </div>
-                  )}
+                    )}
+                  </div>
                   <div className={styles.themeDetails}>
                     <div className={styles.themeName}>
                       <span className={styles.label}>

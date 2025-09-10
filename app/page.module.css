@@ -938,6 +938,72 @@
   border-left: 3px solid #ffc107;
 }
 
+/* Enhanced Image Preview Styling */
+.themeImageContainer {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  height: 250px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border: 2px solid rgba(255, 255, 255, 0.8);
+}
+
+.themeImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+  transition: all 0.3s ease;
+  border-radius: 10px;
+}
+
+.themeImage:hover {
+  transform: scale(1.02);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2);
+}
+
+.imagePlaceholder {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  color: #6c757d;
+  text-align: center;
+  padding: 1rem;
+  border-radius: 10px;
+  border: 2px dashed #dee2e6;
+}
+
+.imagePlaceholder svg {
+  margin-bottom: 0.5rem;
+  opacity: 0.6;
+}
+
+.imagePlaceholder span {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #495057;
+}
+
+/* Loading animation for image generation */
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+.imagePlaceholder.generating {
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
 /* Confidence level styling */
 .confidenceHigh {
   border-color: #28a745;
