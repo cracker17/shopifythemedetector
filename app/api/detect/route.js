@@ -833,10 +833,10 @@ export async function POST(request) {
       // Generate store screenshot using ScreenshotOne API directly
       try {
         console.log('📸 Generating screenshot for:', url);
-
+  
         // Use ScreenshotOne API directly with proper parameters
         const screenshotUrl = `https://api.screenshotone.com/take?url=${encodeURIComponent(url)}&viewport_width=1280&viewport_height=720&image_quality=80&format=jpg&cache=true&delay=2&full_page=false&block_cookie_banners=true&block_chats=true&block_ads=true&full_page_scroll=false&device_scale=1`;
-
+  
         // Test if the URL is accessible (optional, but good practice)
         try {
           const testResponse = await fetch(url, { method: 'HEAD', timeout: 5000 });
@@ -846,7 +846,7 @@ export async function POST(request) {
         } catch (testError) {
           console.log('⚠️ Could not verify store URL accessibility');
         }
-
+  
         themeImage = screenshotUrl;
         console.log('📸 Generated Store Screenshot:', themeImage);
       } catch (screenshotError) {
@@ -854,6 +854,46 @@ export async function POST(request) {
         // Fallback to theme preview
         themeImage = `https://cdn.shopify.com/shopifycloud/theme-store/themes/${themeSlug}/preview.jpg`;
         console.log('🖼️ Using theme preview fallback:', themeImage);
+      }
+  
+      // Fetch favicon and meta title for preview
+      let faviconUrl = null;
+      let metaTitle = null;
+      try {
+        console.log('🔍 Fetching favicon and meta title for:', url);
+  
+        // Extract domain for favicon
+        const urlObj = new URL(url);
+        const domain = urlObj.hostname;
+  
+        // Generate favicon URL using Google service
+        faviconUrl = `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
+  
+        // Fetch meta title from the website
+        try {
+          const titleResponse = await fetch(url, {
+            method: 'GET',
+            headers: {
+              'User-Agent': 'Mozilla/5.0 (compatible; ShopifyThemeDetector/1.0)',
+            },
+            timeout: 5000,
+          });
+  
+          if (titleResponse.ok) {
+            const html = await titleResponse.text();
+            const titleMatch = html.match(/<title[^>]*>([^<]+)<\/title>/i);
+            if (titleMatch && titleMatch[1]) {
+              metaTitle = titleMatch[1].trim();
+              console.log('📄 Extracted meta title:', metaTitle);
+            }
+          }
+        } catch (titleError) {
+          console.log('⚠️ Could not fetch meta title:', titleError.message);
+        }
+  
+        console.log('🖼️ Generated favicon URL:', faviconUrl);
+      } catch (faviconError) {
+        console.log('⚠️ Favicon generation failed:', faviconError.message);
       }
     }
 
@@ -884,6 +924,8 @@ export async function POST(request) {
       themeVersion: themeVersion || null,
       themeStoreLink: themeStoreLink || null,
       themeImage: themeImage || null,
+      faviconUrl: faviconUrl || null,
+      metaTitle: metaTitle || null,
       suggestions: Array.isArray(suggestions) ? suggestions : [],
       platform: platform,
     };
@@ -893,6 +935,8 @@ export async function POST(request) {
       themeVersion: responseData.themeVersion,
       themeStoreLink: responseData.themeStoreLink,
       themeImage: responseData.themeImage,
+      faviconUrl: responseData.faviconUrl,
+      metaTitle: responseData.metaTitle,
       suggestions: responseData.suggestions
     });
 

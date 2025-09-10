@@ -217,28 +217,57 @@ export default function Home() {
                       <span>Generating Preview...</span>
                     </div>
 
+                    {/* Favicon and Meta Title Preview */}
+                    <div className={styles.faviconPreview} style={{ display: 'none' }}>
+                      {result.faviconUrl && (
+                        <img
+                          src={result.faviconUrl}
+                          alt="Website Favicon"
+                          className={styles.favicon}
+                          onError={(e) => {
+                            e.target.style.display = 'none';
+                          }}
+                        />
+                      )}
+                      <div className={styles.previewContent}>
+                        <h4 className={styles.previewTitle}>
+                          {result.metaTitle || 'Title Unavailable'}
+                        </h4>
+                        <p className={styles.previewUrl}>
+                          {(() => {
+                            try {
+                              const urlObj = new URL(url);
+                              return urlObj.hostname;
+                            } catch {
+                              return url;
+                            }
+                          })()}
+                        </p>
+                      </div>
+                    </div>
+
                     <img
                       id="site-preview"
-                      src={`https://screenshotone.com/tools/website-screenshot/?url=${encodeURIComponent(url)}`}
-                      alt="Website Preview"
+                      src={result.themeImage}
+                      alt={`${result.themeName} live preview`}
                       className={styles.themeImage}
                       onLoad={(e) => {
-                        // Image loaded successfully - hide placeholder
+                        // Image loaded successfully - hide placeholder and show favicon preview
                         e.target.style.display = 'block';
                         e.target.previousElementSibling.style.display = 'none';
+                        const faviconPreview = e.target.parentElement.querySelector(`.${styles.faviconPreview}`);
+                        if (faviconPreview) {
+                          faviconPreview.style.display = 'flex';
+                        }
                       }}
                       onError={(e) => {
-                        // Image failed to load - show error placeholder
+                        // Image failed to load - show favicon preview as fallback
                         e.target.style.display = 'none';
-                        const placeholder = e.target.previousElementSibling;
-                        placeholder.innerHTML = `
-                          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M4 4h16v16H4V4zm2 2v12h12V6H6zm2 2h8v8H8V8zm2 2v4h4v-4h-4z" fill="currentColor" opacity="0.3"/>
-                            <path d="M6 6l12 12M18 6l-12 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-                          </svg>
-                          <span>Preview Unavailable</span>
-                        `;
-                        placeholder.style.display = 'flex';
+                        const faviconPreview = e.target.parentElement.querySelector(`.${styles.faviconPreview}`);
+                        if (faviconPreview) {
+                          faviconPreview.style.display = 'flex';
+                        }
+                        e.target.previousElementSibling.style.display = 'none';
                       }}
                       style={{
                         width: '100%',
