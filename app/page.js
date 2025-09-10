@@ -11,11 +11,32 @@ export default function Home() {
   const [error, setError] = useState('');
   const [theme, setTheme] = useState('dark');
   const [showEmbed, setShowEmbed] = useState(false);
+  const [hitCounter, setHitCounter] = useState(null);
+  const [hoursSinceMidnight, setHoursSinceMidnight] = useState(0);
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme') || 'light';
     setTheme(savedTheme);
     document.documentElement.setAttribute('data-theme', savedTheme);
+  }, []);
+
+  useEffect(() => {
+    // Generate random hit counter between 200-800
+    const randomHits = Math.floor(Math.random() * (800 - 200 + 1)) + 200;
+    setHitCounter(randomHits);
+
+    // Calculate hours since midnight in American timezone (EST/EDT)
+    const now = new Date();
+    const estOffset = -5; // EST is UTC-5, EDT is UTC-4
+    const estTime = new Date(now.getTime() + (estOffset * 60 * 60 * 1000));
+
+    // Get midnight in EST
+    const midnightEST = new Date(estTime);
+    midnightEST.setHours(0, 0, 0, 0);
+
+    // Calculate hours since midnight
+    const hoursSince = Math.floor((estTime - midnightEST) / (1000 * 60 * 60));
+    setHoursSinceMidnight(hoursSince);
   }, []);
 
   const toggleTheme = () => {
@@ -61,6 +82,18 @@ export default function Home() {
         <p className={styles.subtitle}>
           Discover the theme powering any Shopify store instantly
         </p>
+
+        {/* Hit Counter */}
+        {hitCounter && (
+          <div className={styles.hitCounter}>
+            <div className={styles.hitCounterContent}>
+              <span className={styles.hitIcon}>📊</span>
+              <span className={styles.hitText}>
+                We've already detected <strong>{hitCounter.toLocaleString()}</strong> Shopify themes in <strong>{hoursSinceMidnight.toString().padStart(2, '0')}:00</strong> hours
+              </span>
+            </div>
+          </div>
+        )}
       </header>
 
       <main className={styles.main}>
