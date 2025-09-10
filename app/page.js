@@ -40,27 +40,33 @@ export default function Home() {
     setHoursSinceMidnight(hoursSince);
   }, []);
 
-  // Animate counter when hitCounter is set
+  // Animate counter when hitCounter is set with smooth easing
   useEffect(() => {
     if (hitCounter && animatedCounter !== hitCounter) {
-      const duration = 2000; // 2 seconds animation
-      const steps = 60; // 60 frames per second
-      const increment = hitCounter / steps;
-      const stepDuration = duration / steps;
+      const duration = 2500; // 2.5 seconds for smoother animation
+      const startValue = animatedCounter;
+      const endValue = hitCounter;
+      const startTime = Date.now();
 
-      let currentStep = 0;
-      const timer = setInterval(() => {
-        currentStep++;
-        const currentValue = Math.min(Math.floor(increment * currentStep), hitCounter);
+      // Easing function for smooth animation
+      const easeOutQuart = (t) => 1 - Math.pow(1 - t, 4);
+
+      const animate = () => {
+        const elapsed = Date.now() - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const easedProgress = easeOutQuart(progress);
+
+        const currentValue = Math.floor(startValue + (endValue - startValue) * easedProgress);
         setAnimatedCounter(currentValue);
 
-        if (currentStep >= steps) {
-          clearInterval(timer);
+        if (progress < 1) {
+          requestAnimationFrame(animate);
+        } else {
           setAnimatedCounter(hitCounter); // Ensure final value is exact
         }
-      }, stepDuration);
+      };
 
-      return () => clearInterval(timer);
+      requestAnimationFrame(animate);
     }
   }, [hitCounter, animatedCounter]);
 

@@ -362,22 +362,37 @@
 .hitText strong {
   color: var(--accent);
   font-weight: 700;
-  transition: all 0.1s ease;
-  animation: countUp 2s ease-out;
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: countUp 2.5s cubic-bezier(0.4, 0, 0.2, 1);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
 }
 
 @keyframes countUp {
   0% {
-    transform: scale(1);
-    opacity: 0.7;
+    transform: scale(1) translateY(0px);
+    opacity: 0.6;
+    filter: blur(0.5px);
+  }
+  20% {
+    transform: scale(1.02) translateY(-1px);
+    opacity: 0.8;
+    filter: blur(0px);
   }
   50% {
-    transform: scale(1.05);
+    transform: scale(1.05) translateY(-2px);
     opacity: 1;
+    filter: blur(0px);
+  }
+  80% {
+    transform: scale(1.02) translateY(-1px);
+    opacity: 1;
+    filter: blur(0px);
   }
   100% {
-    transform: scale(1);
+    transform: scale(1) translateY(0px);
     opacity: 1;
+    filter: blur(0px);
   }
 }
 
