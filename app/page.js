@@ -271,9 +271,9 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* Platform & CMS Detection Info */}
-              {platform && platform.name !== 'Unknown' && (
-                <div className={styles.platformInfo}>
+              {/* Platform & CMS Detection Info - Only show for non-Shopify platforms */}
+              {platform && platform.name !== 'Unknown' && platform.name !== 'Shopify' && (
+                <div className={`${styles.platformInfo} ${platform.confidence === 'high' ? styles.confidenceHigh : platform.confidence === 'medium' ? styles.confidenceMedium : styles.confidenceLow}`}>
                   <div className={styles.platformContent}>
                     <span
                       className={styles.platformIcon}
@@ -281,7 +281,7 @@ export default function Home() {
                     />
                     <div className={styles.platformDetails}>
                       <div className={styles.platformText}>
-                        <strong>Platform:</strong> {platform.name}
+                        <strong>Platform detected:</strong> {platform.name}
                         {platform.type && <span className={styles.platformType}> ({platform.type})</span>}
                       </div>
                       {platform.cms && platform.cms !== platform.name && (
@@ -289,28 +289,40 @@ export default function Home() {
                           <strong>CMS:</strong> {platform.cms}
                         </div>
                       )}
+                      {platform.message && (
+                        <div className={styles.platformMessage}>
+                          {platform.message}
+                        </div>
+                      )}
+                      {platform.confidence && platform.confidence !== 'high' && (
+                        <div className={styles.confidenceText}>
+                          Confidence: {platform.confidence}
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
               )}
 
-              {/* Fallback messaging when no platform/CMS detected */}
+              {/* Enhanced fallback messaging when no platform/CMS detected */}
               {(!platform || platform.name === 'Unknown') && result && (
                 <div className={styles.fallbackMessage}>
                   <div className={styles.fallbackContent}>
                     <span className={styles.fallbackIcon}>🔍</span>
                     <div className={styles.fallbackText}>
-                      <strong>Detection Note:</strong> We couldn't identify the specific platform or CMS used by this website.
-                      <div className={styles.fallbackSuggestions}>
-                        <strong>Common alternatives to consider:</strong>
-                        <div className={styles.suggestionTags}>
-                          <span className={styles.suggestionTag}>WordPress</span>
-                          <span className={styles.suggestionTag}>Shopify</span>
-                          <span className={styles.suggestionTag}>Squarespace</span>
-                          <span className={styles.suggestionTag}>Wix</span>
-                          <span className={styles.suggestionTag}>Webflow</span>
+                      <strong>Platform Detection:</strong> {platform?.message || 'We couldn\'t identify the specific platform or CMS used by this website.'}
+                      {platform?.suggestions && platform.suggestions.length > 0 && (
+                        <div className={styles.fallbackSuggestions}>
+                          <strong>Common platforms to consider:</strong>
+                          <div className={styles.suggestionTags}>
+                            {platform.suggestions.map((suggestion, index) => (
+                              <span key={index} className={styles.suggestionTag}>
+                                {suggestion}
+                              </span>
+                            ))}
+                          </div>
                         </div>
-                      </div>
+                      )}
                     </div>
                   </div>
                 </div>

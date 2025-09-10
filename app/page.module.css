@@ -922,6 +922,56 @@
   box-shadow: 0 2px 4px rgba(0, 123, 255, 0.3);
 }
 
+/* Confidence level styling */
+.confidenceHigh {
+  border-color: #28a745;
+  background: linear-gradient(135deg, #e8f5e8 0%, #d4edda 100%);
+}
+
+.confidenceMedium {
+  border-color: #ffc107;
+  background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+}
+
+.confidenceLow {
+  border-color: #fd7e14;
+  background: linear-gradient(135deg, #fff3cd 0%, #fce4a3 100%);
+}
+
+.platformMessage {
+  font-size: 0.9rem;
+  color: #6c757d;
+  font-style: italic;
+  margin-top: 0.25rem;
+}
+
+.confidenceText {
+  font-size: 0.8rem;
+  color: #6c757d;
+  margin-top: 0.25rem;
+  font-weight: 500;
+}
+
+/* Enhanced fallback messaging */
+.fallbackText strong {
+  color: #495057;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.fallbackSuggestions {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #dee2e6;
+}
+
+.fallbackSuggestions strong {
+  color: #343a40;
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
   .headerContent {

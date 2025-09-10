@@ -152,15 +152,16 @@ const themeSuggestions = {
 const platformSignatures = {
   'WordPress': {
     patterns: [
-      /wp-content/i,
+      /wp-content\/themes/i,
+      /wp-content\/plugins/i,
       /wp-includes/i,
-      /wordpress/i,
       /generator.*WordPress/i,
       /wp-json/i,
-      /wp-admin/i
+      /wp-admin/i,
+      /wordpress/i
     ],
     metaTags: ['generator'],
-    scripts: ['wp-embed', 'wp-includes'],
+    scripts: ['wp-embed', 'wp-includes', 'wp-content'],
     icon: '<i class="fab fa-wordpress"></i>',
     cms: 'WordPress',
     type: 'CMS'
@@ -181,11 +182,13 @@ const platformSignatures = {
     patterns: [
       /Mage\.Cookies/i,
       /var FORM_KEY/i,
-      /magento/i,
       /Mage\.Core/i,
-      /Mage\.Data/i
+      /Mage\.Data/i,
+      /magento.*version/i,
+      /skin\/frontend/i,
+      /js\/prototype/i
     ],
-    scripts: ['mage', 'prototype'],
+    scripts: ['mage', 'prototype', 'varien'],
     icon: '<i class="fas fa-store"></i>',
     cms: 'Magento',
     type: 'E-commerce Platform'
@@ -361,7 +364,7 @@ const platformSignatures = {
   }
 };
 
-// Platform detection function with Shopify priority
+// Enhanced platform detection function with improved accuracy
 function detectPlatform(html, headers = {}) {
   const htmlLower = html.toLowerCase();
 
@@ -377,28 +380,27 @@ function detectPlatform(html, headers = {}) {
             cms: shopifySignatures.cms,
             type: shopifySignatures.type,
             icon: shopifySignatures.icon,
-            confidence: 'high'
+            confidence: 'high',
+            message: 'Shopify e-commerce platform detected'
           };
         }
       }
     }
   }
 
-  // Check for other platforms
+  // Check for other platforms with improved specificity
   for (const [platform, signatures] of Object.entries(platformSignatures)) {
     if (platform === 'Shopify') continue; // Already checked above
 
-    // Check HTML patterns
+    let detectionScore = 0;
+    let matchedPatterns = [];
+
+    // Check HTML patterns with scoring
     if (signatures.patterns) {
       for (const pattern of signatures.patterns) {
         if (pattern.test(htmlLower)) {
-          return {
-            name: platform,
-            cms: signatures.cms,
-            type: signatures.type,
-            icon: signatures.icon,
-            confidence: 'high'
-          };
+          detectionScore += 2; // Higher weight for HTML patterns
+          matchedPatterns.push('HTML pattern');
         }
       }
     }
@@ -406,15 +408,10 @@ function detectPlatform(html, headers = {}) {
     // Check meta tags
     if (signatures.metaTags) {
       for (const metaTag of signatures.metaTags) {
-        const metaPattern = new RegExp(`<meta[^>]*name=["']${metaTag}["'][^>]*content=["'][^"']*wordpress[^"']*["'][^>]*>`, 'i');
+        const metaPattern = new RegExp(`<meta[^>]*name=["']${metaTag}["'][^>]*content=["'][^"']*${platform.toLowerCase()}[^"']*["'][^>]*>`, 'i');
         if (metaPattern.test(html)) {
-          return {
-            name: platform,
-            cms: signatures.cms,
-            type: signatures.type,
-            icon: signatures.icon,
-            confidence: 'high'
-          };
+          detectionScore += 3; // Highest weight for meta tags
+          matchedPatterns.push('Meta tag');
         }
       }
     }
@@ -424,13 +421,8 @@ function detectPlatform(html, headers = {}) {
       for (const script of signatures.scripts) {
         const scriptPattern = new RegExp(`<script[^>]*src=["'][^"']*${script}[^"']*["'][^>]*>`, 'i');
         if (scriptPattern.test(html)) {
-          return {
-            name: platform,
-            cms: signatures.cms,
-            type: signatures.type,
-            icon: signatures.icon,
-            confidence: 'high'
-          };
+          detectionScore += 2;
+          matchedPatterns.push('Script reference');
         }
       }
     }
@@ -438,36 +430,73 @@ function detectPlatform(html, headers = {}) {
     // Check headers
     if (signatures.headers) {
       for (const header of signatures.headers) {
-        if (headers[header] && headers[header].toLowerCase().includes('php')) {
-          return {
-            name: platform,
-            cms: signatures.cms,
-            type: signatures.type,
-            icon: signatures.icon,
-            confidence: 'medium'
-          };
+        if (headers[header] && headers[header].toLowerCase().includes(platform.toLowerCase())) {
+          detectionScore += 1;
+          matchedPatterns.push('HTTP header');
         }
       }
     }
+
+    // Require minimum detection score for confidence
+    if (detectionScore >= 2) {
+      const confidence = detectionScore >= 4 ? 'high' : detectionScore >= 3 ? 'medium' : 'low';
+      return {
+        name: platform,
+        cms: signatures.cms,
+        type: signatures.type,
+        icon: signatures.icon,
+        confidence: confidence,
+        message: `${platform} ${signatures.type.toLowerCase()} detected`,
+        detectionScore: detectionScore,
+        matchedPatterns: matchedPatterns
+      };
+    }
   }
 
-  // If no platform detected, check for common patterns
-  if (htmlLower.includes('generator') && htmlLower.includes('content')) {
-    return {
-      name: 'Generic CMS',
-      cms: 'Generic CMS',
-      type: 'Content Management System',
-      icon: '🔧',
-      confidence: 'low'
-    };
+  // Check for common CMS patterns
+  const cmsPatterns = [
+    { name: 'WordPress', pattern: /wp-content|wp-includes|wordpress/i, type: 'CMS' },
+    { name: 'Joomla', pattern: /joomla|com_content/i, type: 'CMS' },
+    { name: 'Drupal', pattern: /drupal|drupal\.js/i, type: 'CMS' },
+    { name: 'Squarespace', pattern: /squarespace|squarespace\.com/i, type: 'Website Builder' },
+    { name: 'Wix', pattern: /wix\.com|wix-viewer/i, type: 'Website Builder' },
+    { name: 'Webflow', pattern: /webflow\.com|fs-attributes/i, type: 'Website Builder' }
+  ];
+
+  for (const cms of cmsPatterns) {
+    if (cms.pattern.test(htmlLower)) {
+      return {
+        name: cms.name,
+        cms: cms.name,
+        type: cms.type,
+        icon: platformSignatures[cms.name]?.icon || '🔧',
+        confidence: 'medium',
+        message: `${cms.name} ${cms.type.toLowerCase()} detected`,
+        detectionScore: 1,
+        matchedPatterns: ['Common pattern']
+      };
+    }
   }
 
+  // If no platform detected, provide helpful fallback
   return {
     name: 'Unknown',
     cms: 'Not Detected',
     type: 'Unknown',
     icon: '❓',
-    confidence: 'none'
+    confidence: 'none',
+    message: 'Platform detection inconclusive. This could be a custom-built website or a less common CMS.',
+    detectionScore: 0,
+    matchedPatterns: [],
+    suggestions: [
+      'WordPress',
+      'Shopify',
+      'Squarespace',
+      'Wix',
+      'Webflow',
+      'Custom PHP',
+      'Static HTML'
+    ]
   };
 }
 
@@ -751,8 +780,13 @@ export async function POST(request) {
     if (isShopifyStore) {
       platform = {
         name: 'Shopify',
+        cms: 'Shopify',
+        type: 'E-commerce Platform',
         icon: '<i class="fab fa-shopify"></i>',
-        confidence: 'high'
+        confidence: 'high',
+        message: 'Shopify e-commerce platform detected',
+        detectionScore: 5,
+        matchedPatterns: ['Shopify.theme', 'schema_name', 'schema_version']
       };
       console.log('🔄 Platform overridden to Shopify due to theme detection');
     }
