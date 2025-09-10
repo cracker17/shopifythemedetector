@@ -465,12 +465,33 @@ export async function POST(request) {
     }
 
 
+    // Generate store screenshot URL using a free screenshot service
+    let storeScreenshot = null;
+    if (url && themeName !== 'Not a Shopify store' && themeName !== 'Store is password protected' && themeName !== 'Store is in maintenance mode' && themeName !== 'Theme not detected') {
+      try {
+        // Using a free screenshot API service (you can replace with your preferred service)
+        const screenshotApiUrl = `https://api.screenshotone.com/take?url=${encodeURIComponent(url)}&viewport_width=1280&viewport_height=720&image_quality=80&format=jpg&cache=true&delay=2&full_page=false&block_cookie_banners=true&block_chats=true&block_ads=true`;
+
+        // For demo purposes, we'll use a placeholder. In production, you'd use:
+        // storeScreenshot = screenshotApiUrl;
+
+        // For now, create a placeholder URL that could be replaced with actual screenshot service
+        storeScreenshot = `https://via.placeholder.com/800x450/0070f3/ffffff?text=Store+Preview+for+${encodeURIComponent(themeName || 'Unknown')}`;
+
+        console.log('📸 Generated Store Screenshot URL:', storeScreenshot);
+      } catch (screenshotError) {
+        console.log('⚠️ Screenshot generation failed:', screenshotError.message);
+        storeScreenshot = null;
+      }
+    }
+
     // Ensure all response fields are properly formatted
     const responseData = {
       themeName: themeName || 'Theme not detected',
       themeVersion: themeVersion || null,
       themeStoreLink: themeStoreLink || null,
       themeImage: themeImage || null,
+      storeScreenshot: storeScreenshot || null,
       suggestions: Array.isArray(suggestions) ? suggestions : [],
     };
 

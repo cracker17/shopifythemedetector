@@ -11,6 +11,7 @@ export default function Home() {
   const [error, setError] = useState('');
   const [theme, setTheme] = useState('dark');
   const [showEmbed, setShowEmbed] = useState(false);
+  const [storeScreenshot, setStoreScreenshot] = useState(null);
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme') || 'light';
@@ -40,6 +41,7 @@ export default function Home() {
       if (response.ok) {
         setResult(data);
         setThemeVersion(data.themeVersion);
+        setStoreScreenshot(data.storeScreenshot);
       } else {
         setError(data.error || 'Failed to detect theme');
       }
@@ -170,6 +172,35 @@ export default function Home() {
                   </div>
                 </div>
               </div>
+
+              {/* Store Preview Image */}
+              {storeScreenshot && result.themeName !== 'Not a Shopify store' && result.themeName !== 'Store is password protected' && result.themeName !== 'Store is in maintenance mode' && (
+                <div className={styles.storePreview}>
+                  <h4>🖼️ Store Preview</h4>
+                  <div className={styles.previewContainer}>
+                    <img
+                      id="store-preview"
+                      src={storeScreenshot}
+                      alt={`${result.themeName} store preview`}
+                      className={styles.storePreviewImage}
+                      onError={(e) => {
+                        e.target.style.display = 'none';
+                        e.target.nextElementSibling.style.display = 'flex';
+                      }}
+                    />
+                    <div
+                      className={styles.previewPlaceholder}
+                      style={{ display: 'none' }}
+                    >
+                      <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M4 4h16v16H4V4zm2 2v12h12V6H6zm2 2h8v8H8V8zm2 2v4h4v-4h-4z" fill="currentColor" opacity="0.3"/>
+                        <path d="M6 6l12 12M18 6l-12 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                      </svg>
+                      <span>Preview Unavailable</span>
+                    </div>
+                  </div>
+                </div>
+              )}
 
               {result.suggestions.length > 0 && result.themeName !== 'Not a Shopify store' && (
                 <div className={styles.suggestions}>
