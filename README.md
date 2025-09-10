@@ -8,6 +8,7 @@ A full-stack web application that detects the Shopify theme used by any store UR
 - **Version Detection**: Extracts and displays theme version information
 - **Comprehensive Theme Library**: 100+ themes with intelligent suggestions based on Shopify's sitemap
 - **Direct Theme Links**: Automatic linking to `https://themes.shopify.com/themes/{theme-name}` (lowercase)
+- **Link Validation**: Checks if theme URLs are accessible, shows warning for broken links
 - **Smart Theme Suggestions**: Context-aware alternatives grouped by style, category, and similarity
 - **Enhanced Edge Case Handling**: Password protection, maintenance mode, and custom theme detection
 - **Responsive Design**: Works perfectly on all devices

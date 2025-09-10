@@ -419,12 +419,29 @@ export async function POST(request) {
     if (themeName && themeName !== 'Not a Shopify store' && themeName !== 'Store is password protected' && themeName !== 'Store is in maintenance mode' && themeName !== 'Theme not detected') {
       // Generate the official Shopify theme store URL using theme name in lowercase
       const themeSlug = themeName.toLowerCase().replace(/\s+/g, '').replace(/[^a-z0-9]/g, '');
-      themeStoreLink = `https://themes.shopify.com/themes/${themeSlug}`;
+      const potentialThemeLink = `https://themes.shopify.com/themes/${themeSlug}`;
 
-      // Generate theme preview image URL using theme name
+      // Check if the theme link is valid (not 404)
+      try {
+        const linkCheckResponse = await fetch(potentialThemeLink, {
+          method: 'HEAD',
+          timeout: 5000, // 5 second timeout for link check
+        });
+
+        if (linkCheckResponse.ok) {
+          themeStoreLink = potentialThemeLink;
+          console.log('🎨 Generated Theme Link:', themeStoreLink);
+        } else {
+          console.log('⚠️ Theme link not available (404):', potentialThemeLink);
+          themeStoreLink = null;
+        }
+      } catch (linkError) {
+        console.log('⚠️ Theme link check failed:', linkError.message);
+        themeStoreLink = null;
+      }
+
+      // Generate theme preview image URL using theme name (always generate, even if link is invalid)
       themeImage = `https://cdn.shopify.com/shopifycloud/theme-store/themes/${themeSlug}/preview.jpg`;
-
-      console.log('🎨 Generated Theme Link:', themeStoreLink);
       console.log('🖼️ Generated Preview Image:', themeImage);
     }
 

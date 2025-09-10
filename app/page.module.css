@@ -323,6 +323,12 @@
   transform: translateX(2px);
 }
 
+.warningText {
+  color: #d32f2f;
+  font-weight: 500;
+  font-style: italic;
+}
+
 .suggestions h4 {
   margin: 0 0 1rem 0;
   color: var(--text-accent);

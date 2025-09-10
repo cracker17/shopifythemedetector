@@ -148,17 +148,23 @@ export default function Home() {
                       </div>
                     )}
 
-                    {result.themeStoreLink && result.themeName !== 'Not a Shopify store' && (
+                    {result.themeName !== 'Not a Shopify store' && result.themeName !== 'Store is password protected' && result.themeName !== 'Store is in maintenance mode' && result.themeName !== 'Theme not detected' && (
                       <div className={styles.themeLink}>
                         <span className={styles.label}>Theme Link:</span>
-                        <a
-                          href={result.themeStoreLink}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className={styles.link}
-                        >
-                          View Theme
-                        </a>
+                        {result.themeStoreLink ? (
+                          <a
+                            href={result.themeStoreLink}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className={styles.link}
+                          >
+                            View Theme
+                          </a>
+                        ) : (
+                          <span className={styles.warningText}>
+                            ⚠️ Shopify Theme URL Not Available
+                          </span>
+                        )}
                       </div>
                     )}
                   </div>
