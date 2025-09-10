@@ -858,18 +858,19 @@ export async function POST(request) {
         console.log('🖼️ Using theme preview fallback:', themeImage);
       }
   
-      // Fetch favicon and meta title for preview
+      // Fetch favicon, meta title, and meta description for preview
+      let metaDescription = null;
       try {
-        console.log('🔍 Fetching favicon and meta title for:', url);
-
+        console.log('🔍 Fetching favicon, meta title, and description for:', url);
+  
         // Extract domain for favicon
         const urlObj = new URL(url);
         const domain = urlObj.hostname;
-
+  
         // Generate favicon URL using Google service
         faviconUrl = `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
-
-        // Fetch meta title from the website
+  
+        // Fetch meta title and description from the website
         try {
           const titleResponse = await fetch(url, {
             method: 'GET',
@@ -878,19 +879,38 @@ export async function POST(request) {
             },
             timeout: 5000,
           });
-
+  
           if (titleResponse.ok) {
             const html = await titleResponse.text();
+  
+            // Extract meta title
             const titleMatch = html.match(/<title[^>]*>([^<]+)<\/title>/i);
             if (titleMatch && titleMatch[1]) {
               metaTitle = titleMatch[1].trim();
               console.log('📄 Extracted meta title:', metaTitle);
             }
+  
+            // Extract meta description
+            const descPatterns = [
+              /<meta[^>]*name=["']description["'][^>]*content=["']([^"']+)["'][^>]*>/i,
+              /<meta[^>]*content=["']([^"']+)["'][^>]*name=["']description["'][^>]*>/i,
+              /<meta[^>]*property=["']og:description["'][^>]*content=["']([^"']+)["'][^>]*>/i,
+              /<meta[^>]*content=["']([^"']+)["'][^>]*property=["']og:description["'][^>]*>/i
+            ];
+  
+            for (const pattern of descPatterns) {
+              const descMatch = html.match(pattern);
+              if (descMatch && descMatch[1]) {
+                metaDescription = descMatch[1].trim();
+                console.log('📝 Extracted meta description:', metaDescription);
+                break;
+              }
+            }
           }
         } catch (titleError) {
-          console.log('⚠️ Could not fetch meta title:', titleError.message);
+          console.log('⚠️ Could not fetch meta data:', titleError.message);
         }
-
+  
         console.log('🖼️ Generated favicon URL:', faviconUrl);
       } catch (faviconError) {
         console.log('⚠️ Favicon generation failed:', faviconError.message);
@@ -926,6 +946,7 @@ export async function POST(request) {
       themeImage: themeImage || null,
       faviconUrl: faviconUrl || null,
       metaTitle: metaTitle || null,
+      metaDescription: metaDescription || null,
       suggestions: Array.isArray(suggestions) ? suggestions : [],
       platform: platform,
     };
@@ -937,6 +958,7 @@ export async function POST(request) {
       themeImage: responseData.themeImage,
       faviconUrl: responseData.faviconUrl,
       metaTitle: responseData.metaTitle,
+      metaDescription: responseData.metaDescription,
       suggestions: responseData.suggestions
     });
 

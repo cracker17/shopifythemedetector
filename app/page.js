@@ -285,6 +285,15 @@ export default function Home() {
                             }
                           })()}
                         </p>
+                        {result.metaDescription && (
+                          <div className={styles.metaDescription}>
+                            <p className={styles.descriptionText}>
+                              {result.metaDescription.length > 120
+                                ? `${result.metaDescription.substring(0, 120)}...`
+                                : result.metaDescription}
+                            </p>
+                          </div>
+                        )}
                       </div>
                     </div>
 
@@ -515,35 +524,54 @@ export default function Home() {
 
             {showEmbed && (
               <div className={styles.embedContent}>
-                <p>Add this script tag to any website to embed the theme detector:</p>
-                <div className={styles.codeBlock}>
-                  <code>
-                    <span className="punctuation">{'<'}</span>
-                    <span className="keyword">script</span>
-                    <span className="operator"> </span>
-                    <span className="keyword">src</span>
-                    <span className="operator">=</span>
-                    <span className="string">"https://shopifythemedetector.vercel.app/shopify-theme-detector.js"</span>
-                    <span className="punctuation">{'>'}</span>
-                    <span className="punctuation">{'</'}</span>
-                    <span className="keyword">script</span>
-                    <span className="punctuation">{'>'}</span>
-                  </code>
-                  <button
-                    onClick={() => navigator.clipboard.writeText('<script src="https://shopifythemedetector.vercel.app/shopify-theme-detector.js"></script>')}
-                    className={styles.copyButton}
-                  >
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                      <rect x="8" y="2" width="8" height="4" rx="1" ry="1" stroke="currentColor" strokeWidth="2"/>
-                      <path d="m9 12 2 2 4-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                    Copy
-                  </button>
-                </div>
-                <p className={styles.note}>
-                  <strong>Note:</strong> This script will embed the Shopify Theme Detector widget on any website.
+                <p className={styles.embedDescription}>
+                  Add this script tag to any website to embed the theme detector:
                 </p>
+                <div className={styles.codeContainer}>
+                  <div className={styles.codeBlock}>
+                    <div className={styles.codeHeader}>
+                      <span className={styles.codeLanguage}>HTML</span>
+                      <button
+                        onClick={() => {
+                          navigator.clipboard.writeText('<script src="https://shopifythemedetector.vercel.app/shopify-theme-detector.js"></script>');
+                          // Show success feedback
+                          const btn = event.target.closest('button');
+                          const originalText = btn.innerHTML;
+                          btn.innerHTML = '✅ Copied!';
+                          setTimeout(() => btn.innerHTML = originalText, 2000);
+                        }}
+                        className={styles.copyButton}
+                        title="Copy to clipboard"
+                      >
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                          <rect x="8" y="2" width="8" height="4" rx="1" ry="1" stroke="currentColor" strokeWidth="2"/>
+                          <path d="m9 12 2 2 4-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                        <span>Copy</span>
+                      </button>
+                    </div>
+                    <pre className={styles.code}>
+                      <code>
+                        <span className={styles.tag}>{'<'}</span>
+                        <span className={styles.element}>script</span>
+                        <span className={styles.attribute}> src</span>
+                        <span className={styles.operator}>=</span>
+                        <span className={styles.string}>"https://shopifythemedetector.vercel.app/shopify-theme-detector.js"</span>
+                        <span className={styles.tag}>{'>'}</span>
+                        <span className={styles.tag}>{'</'}</span>
+                        <span className={styles.element}>script</span>
+                        <span className={styles.tag}>{'>'}</span>
+                      </code>
+                    </pre>
+                  </div>
+                </div>
+                <div className={styles.embedNote}>
+                  <div className={styles.noteIcon}>💡</div>
+                  <div className={styles.noteContent}>
+                    <strong>How it works:</strong> This script will automatically render the Shopify Theme Detector widget on any website. Users can enter a Shopify store URL and instantly see the detected theme with favicon and meta information.
+                  </div>
+                </div>
               </div>
             )}
           </div>
