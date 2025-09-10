@@ -148,7 +148,7 @@ const themeSuggestions = {
   'Theme not detected': ['Dawn', 'Sense', 'Craft', 'Impulse', 'Local'],
 };
 
-// Platform detection signatures with Font Awesome icons
+// Platform detection signatures with Font Awesome icons and CMS information
 const platformSignatures = {
   'WordPress': {
     patterns: [
@@ -161,7 +161,9 @@ const platformSignatures = {
     ],
     metaTags: ['generator'],
     scripts: ['wp-embed', 'wp-includes'],
-    icon: '<i class="fab fa-wordpress"></i>'
+    icon: '<i class="fab fa-wordpress"></i>',
+    cms: 'WordPress',
+    type: 'CMS'
   },
   'WooCommerce': {
     patterns: [
@@ -171,7 +173,9 @@ const platformSignatures = {
       /woocommerce_cart_hash/i
     ],
     scripts: ['woocommerce', 'wc-cart-fragments'],
-    icon: '<i class="fas fa-shopping-cart"></i>'
+    icon: '<i class="fas fa-shopping-cart"></i>',
+    cms: 'WooCommerce',
+    type: 'E-commerce Plugin'
   },
   'Magento': {
     patterns: [
@@ -182,7 +186,9 @@ const platformSignatures = {
       /Mage\.Data/i
     ],
     scripts: ['mage', 'prototype'],
-    icon: '<i class="fas fa-store"></i>'
+    icon: '<i class="fas fa-store"></i>',
+    cms: 'Magento',
+    type: 'E-commerce Platform'
   },
   'Wix': {
     patterns: [
@@ -192,7 +198,9 @@ const platformSignatures = {
       /wix-code/i
     ],
     scripts: ['wix-viewer', 'wix-code'],
-    icon: '<i class="fas fa-palette"></i>'
+    icon: '<i class="fas fa-palette"></i>',
+    cms: 'Wix',
+    type: 'Website Builder'
   },
   'Webflow': {
     patterns: [
@@ -202,7 +210,9 @@ const platformSignatures = {
       /data-wf/i
     ],
     scripts: ['webflow.js', 'fs-attributes'],
-    icon: '<i class="fas fa-globe"></i>'
+    icon: '<i class="fas fa-globe"></i>',
+    cms: 'Webflow',
+    type: 'Website Builder'
   },
   'Go High Level': {
     patterns: [
@@ -212,7 +222,9 @@ const platformSignatures = {
       /location\.iframe/i
     ],
     scripts: ['highlevel', 'gohighlevel'],
-    icon: '<i class="fas fa-chart-line"></i>'
+    icon: '<i class="fas fa-chart-line"></i>',
+    cms: 'Go High Level',
+    type: 'CRM Platform'
   },
   'Squarespace': {
     patterns: [
@@ -222,7 +234,9 @@ const platformSignatures = {
       /squarespace-static/i
     ],
     scripts: ['squarespace'],
-    icon: '<i class="fas fa-th-large"></i>'
+    icon: '<i class="fas fa-th-large"></i>',
+    cms: 'Squarespace',
+    type: 'Website Builder'
   },
   'BigCommerce': {
     patterns: [
@@ -232,7 +246,9 @@ const platformSignatures = {
       /bcapp/i
     ],
     scripts: ['bigcommerce', 'stencil'],
-    icon: '<i class="fas fa-shopping-bag"></i>'
+    icon: '<i class="fas fa-shopping-bag"></i>',
+    cms: 'BigCommerce',
+    type: 'E-commerce Platform'
   },
   'Shopify': {
     patterns: [
@@ -246,7 +262,9 @@ const platformSignatures = {
       /schema_version/i
     ],
     scripts: ['shopify', 'cdn.shopify.com'],
-    icon: '<i class="fab fa-shopify"></i>'
+    icon: '<i class="fab fa-shopify"></i>',
+    cms: 'Shopify',
+    type: 'E-commerce Platform'
   },
   'Drupal': {
     patterns: [
@@ -256,7 +274,9 @@ const platformSignatures = {
       /sites\/all/i
     ],
     scripts: ['drupal.js'],
-    icon: '<i class="fas fa-leaf"></i>'
+    icon: '<i class="fas fa-leaf"></i>',
+    cms: 'Drupal',
+    type: 'CMS'
   },
   'Joomla': {
     patterns: [
@@ -266,7 +286,9 @@ const platformSignatures = {
       /mod_menu/i
     ],
     scripts: ['joomla'],
-    icon: '<i class="fas fa-newspaper"></i>'
+    icon: '<i class="fas fa-newspaper"></i>',
+    cms: 'Joomla',
+    type: 'CMS'
   },
   'PrestaShop': {
     patterns: [
@@ -276,7 +298,9 @@ const platformSignatures = {
       /blockcart/i
     ],
     scripts: ['prestashop'],
-    icon: '<i class="fas fa-shopping-cart"></i>'
+    icon: '<i class="fas fa-shopping-cart"></i>',
+    cms: 'PrestaShop',
+    type: 'E-commerce Platform'
   },
   'OpenCart': {
     patterns: [
@@ -285,7 +309,9 @@ const platformSignatures = {
       /catalog\/view/i
     ],
     scripts: ['opencart'],
-    icon: '<i class="fas fa-shopping-cart"></i>'
+    icon: '<i class="fas fa-shopping-cart"></i>',
+    cms: 'OpenCart',
+    type: 'E-commerce Platform'
   },
   'PHP': {
     patterns: [
@@ -295,7 +321,9 @@ const platformSignatures = {
       /PHPSESSID/i
     ],
     headers: ['X-Powered-By'],
-    icon: '<i class="fab fa-php"></i>'
+    icon: '<i class="fab fa-php"></i>',
+    cms: 'Custom PHP',
+    type: 'Server-side Language'
   },
   'React': {
     patterns: [
@@ -305,7 +333,9 @@ const platformSignatures = {
       /__NEXT__/i
     ],
     scripts: ['react', '_next'],
-    icon: '<i class="fab fa-react"></i>'
+    icon: '<i class="fab fa-react"></i>',
+    cms: 'React/Next.js',
+    type: 'JavaScript Framework'
   },
   'Vue.js': {
     patterns: [
@@ -314,7 +344,9 @@ const platformSignatures = {
       /v-.*=/i
     ],
     scripts: ['vue', 'nuxt'],
-    icon: '<i class="fab fa-vuejs"></i>'
+    icon: '<i class="fab fa-vuejs"></i>',
+    cms: 'Vue.js/Nuxt.js',
+    type: 'JavaScript Framework'
   },
   'Angular': {
     patterns: [
@@ -323,7 +355,9 @@ const platformSignatures = {
       /ng-controller/i
     ],
     scripts: ['angular'],
-    icon: '<i class="fab fa-angular"></i>'
+    icon: '<i class="fab fa-angular"></i>',
+    cms: 'Angular',
+    type: 'JavaScript Framework'
   }
 };
 
@@ -340,6 +374,8 @@ function detectPlatform(html, headers = {}) {
         if (html.includes('Shopify.theme') || html.includes('schema_name') || html.includes('schema_version')) {
           return {
             name: 'Shopify',
+            cms: shopifySignatures.cms,
+            type: shopifySignatures.type,
             icon: shopifySignatures.icon,
             confidence: 'high'
           };
@@ -358,6 +394,8 @@ function detectPlatform(html, headers = {}) {
         if (pattern.test(htmlLower)) {
           return {
             name: platform,
+            cms: signatures.cms,
+            type: signatures.type,
             icon: signatures.icon,
             confidence: 'high'
           };
@@ -372,6 +410,8 @@ function detectPlatform(html, headers = {}) {
         if (metaPattern.test(html)) {
           return {
             name: platform,
+            cms: signatures.cms,
+            type: signatures.type,
             icon: signatures.icon,
             confidence: 'high'
           };
@@ -386,6 +426,8 @@ function detectPlatform(html, headers = {}) {
         if (scriptPattern.test(html)) {
           return {
             name: platform,
+            cms: signatures.cms,
+            type: signatures.type,
             icon: signatures.icon,
             confidence: 'high'
           };
@@ -399,6 +441,8 @@ function detectPlatform(html, headers = {}) {
         if (headers[header] && headers[header].toLowerCase().includes('php')) {
           return {
             name: platform,
+            cms: signatures.cms,
+            type: signatures.type,
             icon: signatures.icon,
             confidence: 'medium'
           };
@@ -411,6 +455,8 @@ function detectPlatform(html, headers = {}) {
   if (htmlLower.includes('generator') && htmlLower.includes('content')) {
     return {
       name: 'Generic CMS',
+      cms: 'Generic CMS',
+      type: 'Content Management System',
       icon: '🔧',
       confidence: 'low'
     };
@@ -418,6 +464,8 @@ function detectPlatform(html, headers = {}) {
 
   return {
     name: 'Unknown',
+    cms: 'Not Detected',
+    type: 'Unknown',
     icon: '❓',
     confidence: 'none'
   };

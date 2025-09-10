@@ -823,6 +823,105 @@
   font-weight: 700;
 }
 
+/* Platform & CMS Detection Info */
+.platformInfo {
+  background: linear-gradient(135deg, #e8f4fd 0%, #d1ecf1 100%);
+  border: 2px solid #17a2b8;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 12px rgba(23, 162, 184, 0.3);
+}
+
+.platformDetails {
+  flex: 1;
+}
+
+.platformText {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #0c5460;
+  line-height: 1.4;
+  margin-bottom: 0.5rem;
+}
+
+.platformType {
+  color: #6c757d;
+  font-weight: normal;
+  font-size: 0.9rem;
+}
+
+.cmsText {
+  font-size: 1rem;
+  color: #495057;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+/* Fallback messaging when no platform/CMS detected */
+.fallbackMessage {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border: 2px solid #6c757d;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 12px rgba(108, 117, 125, 0.3);
+}
+
+.fallbackContent {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.fallbackIcon {
+  font-size: 2rem;
+  flex-shrink: 0;
+  margin-top: 0.2rem;
+}
+
+.fallbackText {
+  flex: 1;
+  font-size: 1rem;
+  color: #495057;
+  line-height: 1.5;
+}
+
+.fallbackSuggestions {
+  margin-top: 1rem;
+}
+
+.fallbackSuggestions strong {
+  color: #343a40;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.suggestionTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.suggestionTag {
+  background: #e9ecef;
+  color: #495057;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  border: 1px solid #dee2e6;
+  transition: all 0.3s ease;
+}
+
+.suggestionTag:hover {
+  background: #007bff;
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 123, 255, 0.3);
+}
+
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
   .headerContent {

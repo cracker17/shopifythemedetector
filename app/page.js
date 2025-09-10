@@ -271,17 +271,47 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* Platform Detection Warning - Only show for non-Shopify platforms */}
-              {platform && platform.name !== 'Unknown' && platform.name !== 'Shopify' && (
-                <div className={styles.platformWarning}>
+              {/* Platform & CMS Detection Info */}
+              {platform && platform.name !== 'Unknown' && (
+                <div className={styles.platformInfo}>
                   <div className={styles.platformContent}>
                     <span
                       className={styles.platformIcon}
                       dangerouslySetInnerHTML={{ __html: platform.icon }}
                     />
-                    <span className={styles.platformText}>
-                      This website uses a <strong>{platform.name}</strong> platform
-                    </span>
+                    <div className={styles.platformDetails}>
+                      <div className={styles.platformText}>
+                        <strong>Platform:</strong> {platform.name}
+                        {platform.type && <span className={styles.platformType}> ({platform.type})</span>}
+                      </div>
+                      {platform.cms && platform.cms !== platform.name && (
+                        <div className={styles.cmsText}>
+                          <strong>CMS:</strong> {platform.cms}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Fallback messaging when no platform/CMS detected */}
+              {(!platform || platform.name === 'Unknown') && result && (
+                <div className={styles.fallbackMessage}>
+                  <div className={styles.fallbackContent}>
+                    <span className={styles.fallbackIcon}>🔍</span>
+                    <div className={styles.fallbackText}>
+                      <strong>Detection Note:</strong> We couldn't identify the specific platform or CMS used by this website.
+                      <div className={styles.fallbackSuggestions}>
+                        <strong>Common alternatives to consider:</strong>
+                        <div className={styles.suggestionTags}>
+                          <span className={styles.suggestionTag}>WordPress</span>
+                          <span className={styles.suggestionTag}>Shopify</span>
+                          <span className={styles.suggestionTag}>Squarespace</span>
+                          <span className={styles.suggestionTag}>Wix</span>
+                          <span className={styles.suggestionTag}>Webflow</span>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               )}
