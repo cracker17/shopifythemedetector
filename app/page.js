@@ -190,7 +190,7 @@ export default function Home() {
             <div className={styles.hitCounterContent}>
               <span className={styles.hitIcon}>📊</span>
               <span className={styles.hitText}>
-                We've already detected <strong>{animatedCounter.toLocaleString()}</strong> Shopify themes in <strong>{hoursSinceMidnight.toString().padStart(2, '0')}:00</strong> hours
+                <strong>{animatedCounter.toLocaleString()}</strong> themes detected in <strong>{hoursSinceMidnight.toString().padStart(2, '0')}h</strong>
               </span>
             </div>
           </div>

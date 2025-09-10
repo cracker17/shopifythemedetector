@@ -963,6 +963,7 @@
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
   z-index: 2;
   position: relative;
+  display: inline;
 }
 
 .hitText {
@@ -1116,13 +1117,15 @@
 
 @media (max-width: 768px) {
   .hitCounterContent {
-    padding: 0.8rem 1.5rem;
-    font-size: 0.85rem;
-    flex-direction: column;
-    gap: 0.3rem;
+    padding: 0.6rem 1.2rem;
+    font-size: 0.8rem;
+    flex-direction: row;
+    gap: 0.5rem;
     text-align: center;
-    margin: 0 1rem;
-    border-radius: 40px;
+    margin: 0 0.5rem;
+    border-radius: 30px;
+    justify-content: center;
+    align-items: center;
   }
 
   .hitText {
@@ -1131,7 +1134,12 @@
   }
 
   .hitIcon {
-    font-size: 1.3rem;
+    display: none;
+  }
+
+  .hitText {
+    font-size: 0.8rem;
+    font-weight: 700;
   }
 
   .hitText strong {
