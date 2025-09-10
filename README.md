@@ -4,12 +4,15 @@ A full-stack web application that detects the Shopify theme used by any store UR
 
 ## Features
 
-- Detect Shopify theme name and theme store ID from any store URL
-- Link to the theme on Shopify Theme Store (if available)
-- Suggest alternative themes based on detected theme
-- Responsive design
-- Embeddable widget for any website
-- Vercel-ready deployment
+- **Multi-Tier Theme Detection**: 3-level detection system for maximum accuracy
+- **Version Detection**: Extracts and displays theme version information
+- **Comprehensive Theme Library**: 100+ themes with intelligent suggestions based on Shopify's sitemap
+- **Direct Theme Store Links**: Automatic linking to `https://themes.shopify.com/themes/{theme_store_id}`
+- **Smart Theme Suggestions**: Context-aware alternatives grouped by style, category, and similarity
+- **Enhanced Edge Case Handling**: Password protection, maintenance mode, and custom theme detection
+- **Responsive Design**: Works perfectly on all devices
+- **Embeddable Widget**: Drop-in JavaScript for any website
+- **Vercel-Ready**: Optimized for serverless deployment
 
 ## Installation
 
@@ -36,6 +39,45 @@ Replace `your-vercel-url` with your actual Vercel deployment URL.
 
 The widget will render in the element with id `shopify-theme-detector`, or append to the body if not found.
 
+## Theme Detection Accuracy
+
+### How It Works
+The detector uses multiple detection methods with a priority order to ensure maximum accuracy:
+
+#### **Detection Priority Order**
+1. **Primary**: `Shopify.theme` object (most reliable)
+2. **Secondary**: `schema_name` and `schema_version` from theme config
+3. **Tertiary**: `data-theme-name` and `data-theme-version` DOM attributes
+
+#### **Detection Methods**
+The detector uses Shopify's official `Shopify.theme` JavaScript object that's injected into every Shopify store:
+
+```javascript
+Shopify.theme = {
+  "name": "Dawn",
+  "id": 12345678,
+  "theme_store_id": 887,
+  "role": "main"
+};
+```
+
+**Fallback Detection Patterns:**
+- `schema_name["']?\s*:\s*["']([^"']+)["']`
+- `schema_version["']?\s*:\s*["']([^"']+)["']`
+- `data-theme-name=["']([^"']+)["']`
+- `data-theme-version=["']([^"']+)["']`
+
+### Detection Methods
+1. **Primary**: Parses `Shopify.theme` object for `name` and `theme_store_id`
+2. **Fallback**: Regex extraction for individual properties
+3. **Validation**: Multiple patterns to handle different formatting
+4. **Edge Cases**: Handles password protection, maintenance mode, custom themes
+
+### Theme Library
+- **100+ Themes**: Comprehensive collection from Shopify's official sitemap
+- **Smart Suggestions**: Grouped by style, category, and visual similarity
+- **Regular Updates**: Based on current Shopify theme offerings
+
 ## API
 
 The app provides an API endpoint at `/api/detect` that accepts POST requests with JSON body:
@@ -52,9 +94,33 @@ Response:
 {
   "themeName": "Dawn",
   "themeStoreLink": "https://themes.shopify.com/themes/dawn",
-  "suggestions": ["Impulse", "Prestige", "Local"]
+  "suggestions": ["Impulse", "Prestige", "Local", "Sense", "Craft"]
 }
 ```
+
+### Response Fields
+- `themeName`: Detected theme name or status message
+- `themeVersion`: Theme version (when available from schema or DOM attributes)
+- `themeStoreLink`: Direct link to theme on Shopify Theme Store (if available)
+- `suggestions`: Array of 3-5 relevant alternative themes based on comprehensive library
+
+## Enhanced Detection Capabilities
+
+### Detection Priority Order
+1. **Primary**: `Shopify.theme` object (most reliable)
+2. **Secondary**: `schema_name` and `schema_version` from theme config
+3. **Tertiary**: `data-theme-name` and `data-theme-version` DOM attributes
+
+### Advanced Pattern Matching
+- **Schema Detection**: `schema_name["']?\s*:\s*["']([^"']+)["']`
+- **Version Detection**: `schema_version["']?\s*:\s*["']([^"']+)["']`
+- **DOM Attributes**: `data-theme-name=["']([^"']+)["']`
+- **Enhanced Store ID**: Multiple patterns for `theme_store_id` extraction
+
+### Version Information Display
+- Theme version appears directly under the theme name in the UI
+- Extracted from multiple sources for maximum compatibility
+- Only displayed when version information is available
 
 ## Technologies Used
 
