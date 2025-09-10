@@ -1054,6 +1054,37 @@
   font-size: 0.9rem;
 }
 
+/* Platform Integration Options styling */
+.platformIntegrationOptions {
+  margin: 0.5rem 0;
+  padding-left: 0;
+}
+
+.integrationOption {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 0.5rem;
+  line-height: 1.4;
+}
+
+.integrationOption:last-child {
+  margin-bottom: 0;
+}
+
+.integrationCheckmark {
+  color: #28a745;
+  margin-right: 0.5rem;
+  font-weight: bold;
+  font-size: 1.1em;
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+}
+
+.integrationText {
+  flex: 1;
+  color: #495057;
+}
+
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
   .headerContent {

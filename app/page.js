@@ -382,12 +382,24 @@ export default function Home() {
                   <div className={styles.suggestionGrid}>
                     <div className={styles.suggestion}>
                       <strong>Consider:</strong>
-                      <ul style={{margin: '0.5rem 0', paddingLeft: '1rem'}}>
-                        <li>Custom {platform.name} + Shopify integration</li>
-                        <li>Migration to pure Shopify</li>
-                        <li>Headless commerce setup</li>
-                        <li>Consult with a developer</li>
-                      </ul>
+                      <div className={styles.platformIntegrationOptions}>
+                        <div className={styles.integrationOption}>
+                          <span className={styles.integrationCheckmark}>✓</span>
+                          <span className={styles.integrationText}>Custom {platform.name} + Shopify integration</span>
+                        </div>
+                        <div className={styles.integrationOption}>
+                          <span className={styles.integrationCheckmark}>✓</span>
+                          <span className={styles.integrationText}>Migration to pure Shopify</span>
+                        </div>
+                        <div className={styles.integrationOption}>
+                          <span className={styles.integrationCheckmark}>✓</span>
+                          <span className={styles.integrationText}>Headless commerce setup</span>
+                        </div>
+                        <div className={styles.integrationOption}>
+                          <span className={styles.integrationCheckmark}>✓</span>
+                          <span className={styles.integrationText}>Consult with a developer</span>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
