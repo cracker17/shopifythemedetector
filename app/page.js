@@ -323,30 +323,7 @@ export default function Home() {
                         e.target.style.display = 'none';
                         const placeholder = e.target.parentElement.querySelector(`.${styles.imagePlaceholder}`);
                         if (placeholder) {
-                          placeholder.innerHTML = `
-                            <div class="${styles.browserMockup}">
-                              <div class="${styles.browserHeader}">
-                                <div class="${styles.browserControls}">
-                                  <div class="${styles.browserButton} ${styles.close}"></div>
-                                  <div class="${styles.browserButton} ${styles.minimize}"></div>
-                                  <div class="${styles.browserButton} ${styles.maximize}"></div>
-                                </div>
-                                <div class="${styles.browserAddress}">
-                                  <div class="${styles.addressBar}">
-                                    <span class="${styles.addressIcon}">🔒</span>
-                                    <span class="${styles.addressText}">https://example.com</span>
-                                  </div>
-                                </div>
-                              </div>
-                              <div class="${styles.browserContent}">
-                                <div class="${styles.contentPlaceholder}">
-                                  <div class="${styles.placeholderIcon}">📷</div>
-                                  <div class="${styles.placeholderText}">Preview Unavailable</div>
-                                </div>
-                              </div>
-                            </div>
-                          `;
-                          placeholder.style.display = 'flex';
+                          placeholder.style.display = 'none';
                         }
                         // Clear the timeout since we handled the error
                         if (previewTimeout) {
