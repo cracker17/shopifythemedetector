@@ -304,8 +304,8 @@ export default function Home() {
                 </div>
               )}
 
-              {/* Enhanced fallback messaging when no platform/CMS detected */}
-              {(!platform || platform.name === 'Unknown') && result && (
+              {/* Enhanced fallback messaging when no platform/CMS detected AND no Shopify theme detected */}
+              {(!platform || platform.name === 'Unknown') && result && result.themeName === 'Not a Shopify store' && (
                 <div className={styles.fallbackMessage}>
                   <div className={styles.fallbackContent}>
                     <span className={styles.fallbackIcon}>🔍</span>
