@@ -12,6 +12,8 @@ A full-stack web application that detects the Shopify theme used by any store UR
 - **Store Screenshots**: Generates and displays actual screenshots of the detected Shopify store with caching for popular stores
 - **Smooth Animated Hit Counter**: Displays randomly generated usage statistics with buttery-smooth counting animation using requestAnimationFrame and easing functions (200-800 themes) in American timezone hours
 - **Modern Animated Search Icon**: Features a sleek SVG search icon with loading animations including rotating circle, pulsing effects, and smooth transitions during theme detection
+- **VS Code-Style Code Block**: Professional embed section with syntax highlighting, macOS-style window controls, and improved copy button with proper spacing
+- **Enhanced Button Contrast**: Improved color contrast for "Detect Theme" button ensuring readability in all states with proper text shadows and background gradients
 - **Smart Theme Suggestions**: Context-aware alternatives grouped by style, category, and similarity
 - **Enhanced Edge Case Handling**: Password protection, maintenance mode, and custom theme detection
 - **Responsive Design**: Works perfectly on all devices

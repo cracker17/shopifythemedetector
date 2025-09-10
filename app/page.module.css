@@ -152,8 +152,8 @@
   justify-content: center;
   gap: 0.5rem;
   padding: 0.75rem 1.5rem;
-  background: linear-gradient(135deg, var(--accent), var(--accent-hover));
-  color: white;
+  background: linear-gradient(135deg, #007bff, #0056b3);
+  color: #ffffff;
   border: none;
   border-radius: 12px;
   font-size: 0.95rem;
@@ -164,24 +164,36 @@
   position: relative;
   overflow: hidden;
   white-space: nowrap;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .button:hover:not(:disabled) {
+  background: linear-gradient(135deg, #0056b3, #004494);
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(0, 123, 255, 0.4);
+  color: #ffffff;
 }
 
 .button:active:not(:disabled) {
   transform: translateY(0);
   box-shadow: 0 2px 8px rgba(0, 123, 255, 0.3);
+  background: linear-gradient(135deg, #004494, #003366);
 }
 
 .button:disabled {
-  background: #e0e0e0;
-  color: #999;
+  background: #cccccc;
+  color: #666666;
   cursor: not-allowed;
   box-shadow: none;
   transform: none;
+  text-shadow: none;
+}
+
+.button.loading {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  animation: pulse 1.5s ease-in-out infinite;
+  color: #ffffff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 .button.loading {
@@ -194,29 +206,45 @@
   align-items: center;
   justify-content: center;
   transition: all 0.3s ease;
+  color: #ffffff;
+}
+
+.button:hover .searchIcon,
+.button:active .searchIcon {
+  color: #ffffff;
 }
 
 .button.loading .searchIcon {
   animation: searchPulse 1.5s ease-in-out infinite;
+  color: #ffffff;
 }
 
 .searchCircle {
   transition: all 0.3s ease;
+  stroke: #ffffff;
 }
 
 .button.loading .searchCircle {
   stroke-dasharray: 50;
   stroke-dashoffset: 0;
   animation: searchRotate 2s linear infinite;
+  stroke: #ffffff;
 }
 
 .searchLine {
   transition: all 0.3s ease;
+  stroke: #ffffff;
+}
+
+.button.loading .searchLine {
+  stroke: #ffffff;
 }
 
 .loadingText {
   font-weight: 600;
   letter-spacing: 0.5px;
+  color: #ffffff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 @keyframes searchPulse {
@@ -568,37 +596,106 @@
 }
 
 .codeBlock {
-  background: var(--bg-secondary);
-  border: 1px solid var(--border);
+  background: #1e1e1e;
+  border: 1px solid #3e3e42;
   border-radius: 8px;
-  padding: 1rem;
+  padding: 1.5rem;
   position: relative;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+}
+
+.codeBlock::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 30px;
+  background: #323233;
+  border-bottom: 1px solid #3e3e42;
+}
+
+.codeBlock::after {
+  content: '';
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: 12px;
+  height: 12px;
+  background: #ff5f56;
+  border-radius: 50%;
+  box-shadow: 20px 0 0 #ffbd2e, 40px 0 0 #27ca3f;
 }
 
 .codeBlock code {
-  font-family: 'Monaco', 'Menlo', monospace;
-  font-size: 0.9rem;
-  color: var(--text-primary);
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: #d4d4d4;
   word-break: break-all;
+  display: block;
+  margin-top: 1rem;
+  position: relative;
+  z-index: 1;
+}
+
+/* VS Code-like syntax highlighting */
+.codeBlock code span.keyword {
+  color: #569cd6;
+  font-weight: 600;
+}
+
+.codeBlock code span.string {
+  color: #ce9178;
+}
+
+.codeBlock code span.comment {
+  color: #6a9955;
+  font-style: italic;
+}
+
+.codeBlock code span.function {
+  color: #dcdcaa;
+}
+
+.codeBlock code span.operator {
+  color: #d4d4d4;
+}
+
+.codeBlock code span.punctuation {
+  color: #ffd700;
 }
 
 .copyButton {
   position: absolute;
-  top: 0.5rem;
-  right: 0.5rem;
-  background: var(--text-accent);
+  top: 0.75rem;
+  right: 0.75rem;
+  background: #007acc;
   color: white;
   border: none;
   border-radius: 6px;
-  padding: 0.25rem 0.5rem;
+  padding: 0.4rem 0.8rem;
   font-size: 0.8rem;
+  font-weight: 500;
   cursor: pointer;
   transition: all 0.3s ease;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .copyButton:hover {
-  background: #0056b3;
+  background: #005a9e;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.copyButton:active {
+  transform: translateY(0);
 }
 
 .note {
