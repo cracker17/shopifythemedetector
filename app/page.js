@@ -22,6 +22,13 @@ export default function Home() {
     document.documentElement.setAttribute('data-theme', savedTheme);
   }, []);
 
+  // Clear platform notification when URL changes
+  useEffect(() => {
+    if (url) {
+      setPlatform(null);
+    }
+  }, [url]);
+
   useEffect(() => {
     // Generate random hit counter between 200-800
     const randomHits = Math.floor(Math.random() * (800 - 200 + 1)) + 200;
@@ -80,10 +87,14 @@ export default function Home() {
 
   const handleDetect = async () => {
     if (!url) return;
+
+    // Clear all previous state before starting new detection
     setLoading(true);
     setError('');
     setResult(null);
-    setPlatform(null); // Clear platform notification
+    setThemeVersion(null);
+    setPlatform(null); // Explicitly clear platform notification
+
     try {
       const response = await fetch('/api/detect', {
         method: 'POST',
@@ -94,12 +105,19 @@ export default function Home() {
       if (response.ok) {
         setResult(data);
         setThemeVersion(data.themeVersion);
-        setPlatform(data.platform);
+        // Only set platform if it exists and should be shown
+        if (data.platform && data.platform.name !== 'Unknown' && data.platform.name !== 'Shopify') {
+          setPlatform(data.platform);
+        } else {
+          setPlatform(null); // Ensure platform is cleared if it shouldn't be shown
+        }
       } else {
         setError(data.error || 'Failed to detect theme');
+        setPlatform(null); // Clear platform on error
       }
     } catch (err) {
       setError('Network error');
+      setPlatform(null); // Clear platform on network error
     }
     setLoading(false);
   };
@@ -137,13 +155,7 @@ export default function Home() {
               type="url"
               placeholder="https://your-shopify-store.com"
               value={url}
-              onChange={(e) => {
-                setUrl(e.target.value);
-                // Clear platform notification when user starts typing new URL
-                if (platform) {
-                  setPlatform(null);
-                }
-              }}
+              onChange={(e) => setUrl(e.target.value)}
               className={styles.input}
             />
             <button
