@@ -15,7 +15,7 @@ A full-stack web application that detects the Shopify theme used by any store UR
 - **VS Code-Style Code Block**: Professional embed section with syntax highlighting, macOS-style window controls, and improved copy button with proper spacing
 - **Enhanced Button Contrast**: Improved color contrast for "Detect Theme" button ensuring readability in all states with proper text shadows and background gradients
 - **Clickable Theme Suggestions**: Suggested alternatives are now live links to actual Shopify theme store pages using the format `https://themes.shopify.com/themes/[theme_name]`
-- **Platform/CMS Detection**: Automatically detects the website's platform or CMS (WordPress, Magento, Wix, Webflow, Go High Level, PHP, etc.) with professional info notifications and platform-specific icons
+- **Platform/CMS Detection**: Automatically detects the website's platform or CMS (WordPress, Magento, Wix, Webflow, Go High Level, PHP, etc.) with red warning notifications for non-Shopify platforms and platform-specific icons
 - **Smart Theme Suggestions**: Context-aware alternatives grouped by style, category, and similarity
 - **Enhanced Edge Case Handling**: Password protection, maintenance mode, and custom theme detection
 - **Responsive Design**: Works perfectly on all devices

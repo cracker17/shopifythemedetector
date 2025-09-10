@@ -790,25 +790,25 @@
   color: var(--text-primary);
 }
 
-/* Platform Detection Info */
+/* Platform Detection Warning */
 .platformWarning {
-  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-  border: 2px solid #dee2e6;
+  background: linear-gradient(135deg, #fff5f5, #fed7d7);
+  border: 2px solid #e53e3e;
   border-radius: 12px;
   padding: 1.5rem;
   margin-bottom: 2rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(229, 62, 62, 0.3);
   position: relative;
   overflow: hidden;
 }
 
 .platformWarning::before {
-  content: 'ℹ️';
+  content: '⚠️';
   position: absolute;
   top: 1rem;
   right: 1rem;
   font-size: 1.5rem;
-  opacity: 0.6;
+  opacity: 0.8;
 }
 
 .platformContent {
@@ -826,13 +826,13 @@
 
 .platformText {
   font-size: 1.1rem;
-  font-weight: 500;
-  color: #495057;
+  font-weight: 600;
+  color: #c53030;
   line-height: 1.4;
 }
 
 .platformText strong {
-  color: #212529;
+  color: #742a2a;
   font-weight: 700;
 }
 

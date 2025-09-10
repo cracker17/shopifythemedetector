@@ -256,8 +256,8 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* Platform Detection Warning */}
-              {platform && platform.name !== 'Unknown' && (
+              {/* Platform Detection Warning - Only show for non-Shopify platforms */}
+              {platform && platform.name !== 'Unknown' && platform.name !== 'Shopify' && (
                 <div className={styles.platformWarning}>
                   <div className={styles.platformContent}>
                     <span className={styles.platformIcon}>{platform.icon}</span>
