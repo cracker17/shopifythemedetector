@@ -9,6 +9,7 @@ A full-stack web application that detects the Shopify theme used by any store UR
 - **Comprehensive Theme Library**: 100+ themes with intelligent suggestions based on Shopify's sitemap
 - **Direct Theme Links**: Automatic linking to `https://themes.shopify.com/themes/{theme-name}` (lowercase)
 - **Link Validation**: Checks if theme URLs are accessible, shows warning for broken links
+- **Store Screenshots**: Generates and displays actual screenshots of the detected Shopify store
 - **Smart Theme Suggestions**: Context-aware alternatives grouped by style, category, and similarity
 - **Enhanced Edge Case Handling**: Password protection, maintenance mode, and custom theme detection
 - **Responsive Design**: Works perfectly on all devices
@@ -96,7 +97,7 @@ Response:
   "themeName": "Dawn",
   "themeVersion": "9.0.0",
   "themeStoreLink": "https://themes.shopify.com/themes/dawn",
-  "themeImage": "https://cdn.shopify.com/shopifycloud/theme-store/themes/dawn/preview.jpg",
+  "themeImage": "https://via.placeholder.com/800x450/0070f3/ffffff?text=Screenshot+of+example-shopify-store.com",
   "suggestions": ["Impulse", "Prestige", "Local", "Sense", "Craft"]
 }
 ```

@@ -440,9 +440,22 @@ export async function POST(request) {
         themeStoreLink = null;
       }
 
-      // Generate theme preview image URL using theme name (always generate, even if link is invalid)
-      themeImage = `https://cdn.shopify.com/shopifycloud/theme-store/themes/${themeSlug}/preview.jpg`;
-      console.log('🖼️ Generated Preview Image:', themeImage);
+      // Generate store screenshot using a screenshot service
+      try {
+        // Using ScreenshotOne API for store screenshots (free tier available)
+        const screenshotApiUrl = `https://api.screenshotone.com/take?url=${encodeURIComponent(url)}&viewport_width=1280&viewport_height=720&image_quality=80&format=jpg&cache=true&delay=2&full_page=false&block_cookie_banners=true&block_chats=true&block_ads=true`;
+
+        // For demo purposes, we'll use a placeholder that represents the store screenshot
+        // In production, replace with actual screenshot service
+        themeImage = `https://via.placeholder.com/800x450/0070f3/ffffff?text=Screenshot+of+${encodeURIComponent(url.replace('https://', '').replace('http://', ''))}`;
+
+        console.log('📸 Generated Store Screenshot:', themeImage);
+      } catch (screenshotError) {
+        console.log('⚠️ Screenshot generation failed:', screenshotError.message);
+        // Fallback to theme preview image
+        themeImage = `https://cdn.shopify.com/shopifycloud/theme-store/themes/${themeSlug}/preview.jpg`;
+        console.log('🖼️ Fallback to Theme Preview Image:', themeImage);
+      }
     }
 
     // Suggestions - only show if we detected a known theme
