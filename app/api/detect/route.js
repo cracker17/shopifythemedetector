@@ -148,6 +148,257 @@ const themeSuggestions = {
   'Theme not detected': ['Dawn', 'Sense', 'Craft', 'Impulse', 'Local'],
 };
 
+// Platform detection signatures
+const platformSignatures = {
+  'WordPress': {
+    patterns: [
+      /wp-content/i,
+      /wp-includes/i,
+      /wordpress/i,
+      /generator.*WordPress/i,
+      /wp-json/i,
+      /wp-admin/i
+    ],
+    metaTags: ['generator'],
+    scripts: ['wp-embed', 'wp-includes'],
+    icon: '🔧'
+  },
+  'WooCommerce': {
+    patterns: [
+      /woocommerce/i,
+      /wc-ajax/i,
+      /woocommerce-session/i,
+      /woocommerce_cart_hash/i
+    ],
+    scripts: ['woocommerce', 'wc-cart-fragments'],
+    icon: '🛒'
+  },
+  'Magento': {
+    patterns: [
+      /Mage\.Cookies/i,
+      /var FORM_KEY/i,
+      /magento/i,
+      /Mage\.Core/i,
+      /Mage\.Data/i
+    ],
+    scripts: ['mage', 'prototype'],
+    icon: '🏪'
+  },
+  'Wix': {
+    patterns: [
+      /wix\.com/i,
+      /wix-static/i,
+      /wix-viewer/i,
+      /wix-code/i
+    ],
+    scripts: ['wix-viewer', 'wix-code'],
+    icon: '🎨'
+  },
+  'Webflow': {
+    patterns: [
+      /webflow\.com/i,
+      /webflow/i,
+      /fs-attributes/i,
+      /data-wf/i
+    ],
+    scripts: ['webflow.js', 'fs-attributes'],
+    icon: '🌐'
+  },
+  'Go High Level': {
+    patterns: [
+      /gohighlevel\.com/i,
+      /highlevel/i,
+      /ghl/i,
+      /location\.iframe/i
+    ],
+    scripts: ['highlevel', 'gohighlevel'],
+    icon: '📈'
+  },
+  'Squarespace': {
+    patterns: [
+      /squarespace\.com/i,
+      /squarespace/i,
+      /static\.squarespace\.com/i,
+      /squarespace-static/i
+    ],
+    scripts: ['squarespace'],
+    icon: '▫️'
+  },
+  'BigCommerce': {
+    patterns: [
+      /bigcommerce\.com/i,
+      /bigcommerce/i,
+      /stencil/i,
+      /bcapp/i
+    ],
+    scripts: ['bigcommerce', 'stencil'],
+    icon: '🛍️'
+  },
+  'Shopify': {
+    patterns: [
+      /shopify/i,
+      /Shopify\.theme/i,
+      /cdn\.shopify\.com/i,
+      /myshopify\.com/i
+    ],
+    scripts: ['shopify'],
+    icon: '🛒'
+  },
+  'Drupal': {
+    patterns: [
+      /drupal/i,
+      /Drupal\.settings/i,
+      /drupal\.js/i,
+      /sites\/all/i
+    ],
+    scripts: ['drupal.js'],
+    icon: '🌱'
+  },
+  'Joomla': {
+    patterns: [
+      /joomla/i,
+      /Joomla/i,
+      /com_content/i,
+      /mod_menu/i
+    ],
+    scripts: ['joomla'],
+    icon: '📰'
+  },
+  'PrestaShop': {
+    patterns: [
+      /prestashop/i,
+      /presta/i,
+      /id_product/i,
+      /blockcart/i
+    ],
+    scripts: ['prestashop'],
+    icon: '🛒'
+  },
+  'OpenCart': {
+    patterns: [
+      /opencart/i,
+      /route=common/i,
+      /catalog\/view/i
+    ],
+    scripts: ['opencart'],
+    icon: '🛒'
+  },
+  'PHP': {
+    patterns: [
+      /\.php/i,
+      /php/i,
+      /session_id/i,
+      /PHPSESSID/i
+    ],
+    headers: ['X-Powered-By'],
+    icon: '🐘'
+  },
+  'React': {
+    patterns: [
+      /react/i,
+      /_next/i,
+      /data-react/i,
+      /__NEXT__/i
+    ],
+    scripts: ['react', '_next'],
+    icon: '⚛️'
+  },
+  'Vue.js': {
+    patterns: [
+      /vue/i,
+      /nuxt/i,
+      /v-.*=/i
+    ],
+    scripts: ['vue', 'nuxt'],
+    icon: '💚'
+  },
+  'Angular': {
+    patterns: [
+      /angular/i,
+      /ng-app/i,
+      /ng-controller/i
+    ],
+    scripts: ['angular'],
+    icon: '🅰️'
+  }
+};
+
+// Platform detection function
+function detectPlatform(html, headers = {}) {
+  const htmlLower = html.toLowerCase();
+
+  for (const [platform, signatures] of Object.entries(platformSignatures)) {
+    // Check HTML patterns
+    if (signatures.patterns) {
+      for (const pattern of signatures.patterns) {
+        if (pattern.test(htmlLower)) {
+          return {
+            name: platform,
+            icon: signatures.icon,
+            confidence: 'high'
+          };
+        }
+      }
+    }
+
+    // Check meta tags
+    if (signatures.metaTags) {
+      for (const metaTag of signatures.metaTags) {
+        const metaPattern = new RegExp(`<meta[^>]*name=["']${metaTag}["'][^>]*content=["'][^"']*wordpress[^"']*["'][^>]*>`, 'i');
+        if (metaPattern.test(html)) {
+          return {
+            name: platform,
+            icon: signatures.icon,
+            confidence: 'high'
+          };
+        }
+      }
+    }
+
+    // Check scripts
+    if (signatures.scripts) {
+      for (const script of signatures.scripts) {
+        const scriptPattern = new RegExp(`<script[^>]*src=["'][^"']*${script}[^"']*["'][^>]*>`, 'i');
+        if (scriptPattern.test(html)) {
+          return {
+            name: platform,
+            icon: signatures.icon,
+            confidence: 'high'
+          };
+        }
+      }
+    }
+
+    // Check headers
+    if (signatures.headers) {
+      for (const header of signatures.headers) {
+        if (headers[header] && headers[header].toLowerCase().includes('php')) {
+          return {
+            name: platform,
+            icon: signatures.icon,
+            confidence: 'medium'
+          };
+        }
+      }
+    }
+  }
+
+  // If no platform detected, check for common patterns
+  if (htmlLower.includes('generator') && htmlLower.includes('content')) {
+    return {
+      name: 'Generic CMS',
+      icon: '🔧',
+      confidence: 'low'
+    };
+  }
+
+  return {
+    name: 'Unknown',
+    icon: '❓',
+    confidence: 'none'
+  };
+}
+
 // Enhanced theme detection utility function
 function detectThemeData(html) {
   let themeName = null;
@@ -290,6 +541,10 @@ export async function POST(request) {
     let themeVersion = null;
     let themeStoreLink = null;
     let themeImage = null;
+
+    // Detect platform/CMS
+    const platform = detectPlatform(html, Object.fromEntries(response.headers.entries()));
+    console.log('🔍 Platform Detection:', platform);
 
     // Enhanced Detection Logic with Priority Order (Schema-first approach)
 
@@ -495,6 +750,7 @@ export async function POST(request) {
       themeStoreLink: themeStoreLink || null,
       themeImage: themeImage || null,
       suggestions: Array.isArray(suggestions) ? suggestions : [],
+      platform: platform,
     };
 
     console.log('Final response data:', {

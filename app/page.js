@@ -14,6 +14,7 @@ export default function Home() {
   const [hitCounter, setHitCounter] = useState(null);
   const [animatedCounter, setAnimatedCounter] = useState(0);
   const [hoursSinceMidnight, setHoursSinceMidnight] = useState(0);
+  const [platform, setPlatform] = useState(null);
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme') || 'light';
@@ -92,6 +93,7 @@ export default function Home() {
       if (response.ok) {
         setResult(data);
         setThemeVersion(data.themeVersion);
+        setPlatform(data.platform);
       } else {
         setError(data.error || 'Failed to detect theme');
       }
@@ -246,6 +248,18 @@ export default function Home() {
                   </div>
                 </div>
               </div>
+
+              {/* Platform Detection Warning */}
+              {platform && platform.name !== 'Unknown' && (
+                <div className={styles.platformWarning}>
+                  <div className={styles.platformContent}>
+                    <span className={styles.platformIcon}>{platform.icon}</span>
+                    <span className={styles.platformText}>
+                      This website uses a <strong>{platform.name}</strong> platform
+                    </span>
+                  </div>
+                </div>
+              )}
 
               {result.suggestions.length > 0 && result.themeName !== 'Not a Shopify store' && (
                 <div className={styles.suggestions}>
