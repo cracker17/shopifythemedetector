@@ -83,6 +83,7 @@ export default function Home() {
     setLoading(true);
     setError('');
     setResult(null);
+    setPlatform(null); // Clear platform notification
     try {
       const response = await fetch('/api/detect', {
         method: 'POST',
@@ -136,7 +137,13 @@ export default function Home() {
               type="url"
               placeholder="https://your-shopify-store.com"
               value={url}
-              onChange={(e) => setUrl(e.target.value)}
+              onChange={(e) => {
+                setUrl(e.target.value);
+                // Clear platform notification when user starts typing new URL
+                if (platform) {
+                  setPlatform(null);
+                }
+              }}
               className={styles.input}
             />
             <button

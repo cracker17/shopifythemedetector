@@ -790,20 +790,20 @@
   color: var(--text-primary);
 }
 
-/* Platform Detection Warning */
+/* Platform Detection Info */
 .platformWarning {
-  background: linear-gradient(135deg, #fff3cd, #ffeaa7);
-  border: 2px solid #ffc107;
+  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+  border: 2px solid #dee2e6;
   border-radius: 12px;
   padding: 1.5rem;
   margin-bottom: 2rem;
-  box-shadow: 0 4px 12px rgba(255, 193, 7, 0.3);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   position: relative;
   overflow: hidden;
 }
 
 .platformWarning::before {
-  content: '⚠️';
+  content: 'ℹ️';
   position: absolute;
   top: 1rem;
   right: 1rem;
@@ -827,12 +827,12 @@
 .platformText {
   font-size: 1.1rem;
   font-weight: 500;
-  color: #856404;
+  color: #495057;
   line-height: 1.4;
 }
 
 .platformText strong {
-  color: #533f00;
+  color: #212529;
   font-weight: 700;
 }
 
