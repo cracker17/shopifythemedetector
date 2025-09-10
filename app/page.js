@@ -12,6 +12,7 @@ export default function Home() {
   const [theme, setTheme] = useState('dark');
   const [showEmbed, setShowEmbed] = useState(false);
   const [hitCounter, setHitCounter] = useState(null);
+  const [animatedCounter, setAnimatedCounter] = useState(0);
   const [hoursSinceMidnight, setHoursSinceMidnight] = useState(0);
 
   useEffect(() => {
@@ -38,6 +39,30 @@ export default function Home() {
     const hoursSince = Math.floor((estTime - midnightEST) / (1000 * 60 * 60));
     setHoursSinceMidnight(hoursSince);
   }, []);
+
+  // Animate counter when hitCounter is set
+  useEffect(() => {
+    if (hitCounter && animatedCounter !== hitCounter) {
+      const duration = 2000; // 2 seconds animation
+      const steps = 60; // 60 frames per second
+      const increment = hitCounter / steps;
+      const stepDuration = duration / steps;
+
+      let currentStep = 0;
+      const timer = setInterval(() => {
+        currentStep++;
+        const currentValue = Math.min(Math.floor(increment * currentStep), hitCounter);
+        setAnimatedCounter(currentValue);
+
+        if (currentStep >= steps) {
+          clearInterval(timer);
+          setAnimatedCounter(hitCounter); // Ensure final value is exact
+        }
+      }, stepDuration);
+
+      return () => clearInterval(timer);
+    }
+  }, [hitCounter, animatedCounter]);
 
   const toggleTheme = () => {
     const newTheme = theme === 'light' ? 'dark' : 'light';
@@ -89,7 +114,7 @@ export default function Home() {
             <div className={styles.hitCounterContent}>
               <span className={styles.hitIcon}>📊</span>
               <span className={styles.hitText}>
-                We've already detected <strong>{hitCounter.toLocaleString()}</strong> Shopify themes in <strong>{hoursSinceMidnight.toString().padStart(2, '0')}:00</strong> hours
+                We've already detected <strong>{animatedCounter.toLocaleString()}</strong> Shopify themes in <strong>{hoursSinceMidnight.toString().padStart(2, '0')}:00</strong> hours
               </span>
             </div>
           </div>
