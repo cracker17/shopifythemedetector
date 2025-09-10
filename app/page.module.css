@@ -329,61 +329,6 @@
   font-style: italic;
 }
 
-.storePreview {
-  margin-bottom: 2rem;
-}
-
-.storePreview h4 {
-  margin: 0 0 1rem 0;
-  color: var(--text-accent);
-  font-size: 1.2rem;
-}
-
-.previewContainer {
-  position: relative;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  background: var(--bg-primary);
-  border: 1px solid var(--border);
-}
-
-.storePreviewImage {
-  width: 100%;
-  height: auto;
-  max-height: 400px;
-  object-fit: cover;
-  display: block;
-  transition: transform 0.3s ease;
-}
-
-.storePreviewImage:hover {
-  transform: scale(1.02);
-}
-
-.previewPlaceholder {
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 3rem;
-  color: var(--text-secondary);
-  text-align: center;
-  font-size: 0.9rem;
-  font-weight: 500;
-  min-height: 200px;
-}
-
-.previewPlaceholder svg {
-  margin-bottom: 1rem;
-  color: var(--text-secondary);
-  opacity: 0.6;
-}
-
-.previewPlaceholder span {
-  font-size: 0.9rem;
-  opacity: 0.8;
-}
-
 .suggestions h4 {
   margin: 0 0 1rem 0;
   color: var(--text-accent);
