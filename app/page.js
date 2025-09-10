@@ -16,6 +16,7 @@ export default function Home() {
   const [hoursSinceMidnight, setHoursSinceMidnight] = useState(0);
   const [platform, setPlatform] = useState(null);
   const [imageLoading, setImageLoading] = useState(false);
+  const [previewTimeout, setPreviewTimeout] = useState(null);
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme') || 'light';
@@ -30,8 +31,22 @@ export default function Home() {
       setPlatform(null);
       setThemeVersion(null);
       setError('');
+      // Clear any existing timeout
+      if (previewTimeout) {
+        clearTimeout(previewTimeout);
+        setPreviewTimeout(null);
+      }
     }
   }, [url]);
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (previewTimeout) {
+        clearTimeout(previewTimeout);
+      }
+    };
+  }, [previewTimeout]);
 
   useEffect(() => {
     // Generate random hit counter between 200-800
@@ -100,6 +115,12 @@ export default function Home() {
     setThemeVersion(null);
     setPlatform(null); // Explicitly clear platform notification
 
+    // Clear any existing timeout
+    if (previewTimeout) {
+      clearTimeout(previewTimeout);
+      setPreviewTimeout(null);
+    }
+
     try {
       const response = await fetch('/api/detect', {
         method: 'POST',
@@ -116,6 +137,27 @@ export default function Home() {
         } else {
           setPlatform(null); // Ensure platform is cleared if it shouldn't be shown
         }
+
+        // Set up a timeout to show favicon preview after 3 seconds if screenshot doesn't load
+        const timeout = setTimeout(() => {
+          console.log('⏰ Timeout reached - showing favicon preview as fallback');
+          const imageElement = document.getElementById('site-preview');
+          if (imageElement && imageElement.style.display === 'none') {
+            const placeholder = imageElement.parentElement.querySelector(`.${styles.imagePlaceholder}`);
+            if (placeholder) {
+              placeholder.innerHTML = `
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M4 4h16v16H4V4zm2 2v12h12V6H6zm2 2h8v8H8V8zm2 2v4h4v-4h-4z" fill="currentColor" opacity="0.3"/>
+                  <path d="M6 6l12 12M18 6l-12 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                </svg>
+                <span>Screenshot taking too long - showing favicon preview</span>
+              `;
+              placeholder.style.display = 'flex';
+            }
+          }
+        }, 3000); // 3 second timeout
+
+        setPreviewTimeout(timeout);
       } else {
         setError(data.error || 'Failed to detect theme');
         setPlatform(null); // Clear platform on error
@@ -217,8 +259,8 @@ export default function Home() {
                       <span>Generating Preview...</span>
                     </div>
 
-                    {/* Favicon and Meta Title Preview */}
-                    <div className={styles.faviconPreview} style={{ display: 'none' }}>
+                    {/* Favicon and Meta Title Preview - Always shown as overlay */}
+                    <div className={styles.faviconPreview} style={{ display: 'flex' }}>
                       {result.faviconUrl && (
                         <img
                           src={result.faviconUrl}
@@ -246,28 +288,46 @@ export default function Home() {
                       </div>
                     </div>
 
+                    {/* Main screenshot image */}
                     <img
                       id="site-preview"
                       src={result.themeImage}
                       alt={`${result.themeName} live preview`}
                       className={styles.themeImage}
                       onLoad={(e) => {
-                        // Image loaded successfully - hide placeholder and show favicon preview
+                        // Image loaded successfully - hide loading placeholder and clear timeout
+                        console.log('✅ Screenshot loaded successfully');
                         e.target.style.display = 'block';
-                        e.target.previousElementSibling.style.display = 'none';
-                        const faviconPreview = e.target.parentElement.querySelector(`.${styles.faviconPreview}`);
-                        if (faviconPreview) {
-                          faviconPreview.style.display = 'flex';
+                        const placeholder = e.target.parentElement.querySelector(`.${styles.imagePlaceholder}`);
+                        if (placeholder) {
+                          placeholder.style.display = 'none';
+                        }
+                        // Clear the timeout since image loaded successfully
+                        if (previewTimeout) {
+                          clearTimeout(previewTimeout);
+                          setPreviewTimeout(null);
                         }
                       }}
                       onError={(e) => {
-                        // Image failed to load - show favicon preview as fallback
+                        // Image failed to load - hide loading and show error state
+                        console.log('❌ Screenshot failed to load');
                         e.target.style.display = 'none';
-                        const faviconPreview = e.target.parentElement.querySelector(`.${styles.faviconPreview}`);
-                        if (faviconPreview) {
-                          faviconPreview.style.display = 'flex';
+                        const placeholder = e.target.parentElement.querySelector(`.${styles.imagePlaceholder}`);
+                        if (placeholder) {
+                          placeholder.innerHTML = `
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <path d="M4 4h16v16H4V4zm2 2v12h12V6H6zm2 2h8v8H8V8zm2 2v4h4v-4h-4z" fill="currentColor" opacity="0.3"/>
+                              <path d="M6 6l12 12M18 6l-12 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                            </svg>
+                            <span>Screenshot Unavailable</span>
+                          `;
+                          placeholder.style.display = 'flex';
                         }
-                        e.target.previousElementSibling.style.display = 'none';
+                        // Clear the timeout since we handled the error
+                        if (previewTimeout) {
+                          clearTimeout(previewTimeout);
+                          setPreviewTimeout(null);
+                        }
                       }}
                       style={{
                         width: '100%',
