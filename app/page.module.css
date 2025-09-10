@@ -550,10 +550,34 @@
   transition: all 0.3s ease;
 }
 
-.suggestion:hover {
+.suggestionLink {
+  text-decoration: none;
+  display: block;
+  transition: all 0.3s ease;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.suggestionLink:hover {
+  transform: translateY(-2px);
+}
+
+.suggestionLink:hover .suggestion {
   background: var(--gradient);
   color: white;
-  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.suggestion {
+  background: var(--bg-secondary);
+  padding: 1rem;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: 600;
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  transition: all 0.3s ease;
+  cursor: pointer;
 }
 
 .embedSection {

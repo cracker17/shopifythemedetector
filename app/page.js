@@ -252,9 +252,17 @@ export default function Home() {
                   <h4>💡 Suggested Alternatives</h4>
                   <div className={styles.suggestionGrid}>
                     {result.suggestions.map((suggestion, index) => (
-                      <div key={index} className={styles.suggestion}>
-                        {suggestion}
-                      </div>
+                      <a
+                        key={index}
+                        href={`https://themes.shopify.com/themes/${suggestion.toLowerCase()}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={styles.suggestionLink}
+                      >
+                        <div className={styles.suggestion}>
+                          {suggestion}
+                        </div>
+                      </a>
                     ))}
                   </div>
                 </div>
