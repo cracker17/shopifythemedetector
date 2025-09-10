@@ -1063,8 +1063,8 @@
 .integrationOption {
   display: flex;
   align-items: flex-start;
-  margin-bottom: 0.5rem;
-  line-height: 1.4;
+  margin-bottom: 0.25rem;
+  line-height: 1.2;
 }
 
 .integrationOption:last-child {
@@ -1077,12 +1077,15 @@
   font-weight: bold;
   font-size: 1.1em;
   flex-shrink: 0;
-  margin-top: 0.1rem;
+  margin-top: 0.05rem;
+  line-height: 1.2;
 }
 
 .integrationText {
   flex: 1;
   color: #495057;
+  line-height: 1.2;
+  margin-top: 0.05rem;
 }
 
 /* Mobile Responsiveness */
