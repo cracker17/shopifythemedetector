@@ -644,6 +644,7 @@ export async function POST(request) {
     let themeImage = null;
     let faviconUrl = null;
     let metaTitle = null;
+    let metaDescription = null;
 
     // Detect platform/CMS with Shopify priority
     let platform = detectPlatform(html, Object.fromEntries(response.headers.entries()));
@@ -859,7 +860,6 @@ export async function POST(request) {
       }
   
       // Fetch favicon, meta title, and meta description for preview
-      let metaDescription = null;
       try {
         console.log('🔍 Fetching favicon, meta title, and description for:', url);
   
