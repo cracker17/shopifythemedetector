@@ -150,7 +150,7 @@ export default function Home() {
 
                     {result.themeStoreLink && result.themeName !== 'Not a Shopify store' && (
                       <div className={styles.themeLink}>
-                        <span className={styles.label}>Theme Store Link:</span>
+                        <span className={styles.label}>Theme Link:</span>
                         <a
                           href={result.themeStoreLink}
                           target="_blank"

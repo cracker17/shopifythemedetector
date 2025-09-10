@@ -286,8 +286,10 @@ export async function POST(request) {
       }
     }
 
-    // Initialize theme version
+    // Initialize variables
     let themeVersion = null;
+    let themeStoreLink = null;
+    let themeImage = null;
 
     // Enhanced Detection Logic with Priority Order (Schema-first approach)
 
@@ -413,17 +415,17 @@ export async function POST(request) {
       themeStoreLink = null;
     }
 
-    // Initialize variables
-    let themeStoreLink = null;
-    let themeImage = null;
+    // Theme store link - generate using schema_name (theme name) in lowercase
+    if (themeName && themeName !== 'Not a Shopify store' && themeName !== 'Store is password protected' && themeName !== 'Store is in maintenance mode' && themeName !== 'Theme not detected') {
+      // Generate the official Shopify theme store URL using theme name in lowercase
+      const themeSlug = themeName.toLowerCase().replace(/\s+/g, '').replace(/[^a-z0-9]/g, '');
+      themeStoreLink = `https://themes.shopify.com/themes/${themeSlug}`;
 
-    // Theme store link - only generate if we have a valid theme_store_id
-    if (themeStoreId && themeName !== 'Not a Shopify store' && themeName !== 'Store is password protected' && themeName !== 'Store is in maintenance mode') {
-      // Generate the official Shopify theme store URL
-      themeStoreLink = `https://themes.shopify.com/themes/${themeStoreId}`;
+      // Generate theme preview image URL using theme name
+      themeImage = `https://cdn.shopify.com/shopifycloud/theme-store/themes/${themeSlug}/preview.jpg`;
 
-      // Generate theme preview image URL (Shopify's CDN pattern)
-      themeImage = `https://cdn.shopify.com/shopifycloud/theme-store/themes/${themeStoreId}/preview.jpg`;
+      console.log('🎨 Generated Theme Link:', themeStoreLink);
+      console.log('🖼️ Generated Preview Image:', themeImage);
     }
 
     // Suggestions - only show if we detected a known theme

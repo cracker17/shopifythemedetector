@@ -7,7 +7,7 @@ A full-stack web application that detects the Shopify theme used by any store UR
 - **Multi-Tier Theme Detection**: 3-level detection system for maximum accuracy
 - **Version Detection**: Extracts and displays theme version information
 - **Comprehensive Theme Library**: 100+ themes with intelligent suggestions based on Shopify's sitemap
-- **Direct Theme Store Links**: Automatic linking to `https://themes.shopify.com/themes/{theme_store_id}`
+- **Direct Theme Links**: Automatic linking to `https://themes.shopify.com/themes/{theme-name}` (lowercase)
 - **Smart Theme Suggestions**: Context-aware alternatives grouped by style, category, and similarity
 - **Enhanced Edge Case Handling**: Password protection, maintenance mode, and custom theme detection
 - **Responsive Design**: Works perfectly on all devices
@@ -93,7 +93,9 @@ Response:
 ```json
 {
   "themeName": "Dawn",
+  "themeVersion": "9.0.0",
   "themeStoreLink": "https://themes.shopify.com/themes/dawn",
+  "themeImage": "https://cdn.shopify.com/shopifycloud/theme-store/themes/dawn/preview.jpg",
   "suggestions": ["Impulse", "Prestige", "Local", "Sense", "Craft"]
 }
 ```
@@ -187,7 +189,7 @@ function detectThemeData(html) {
 ```
 Theme: Dawn
 Version: 9.0.0
-Link: https://themes.shopify.com/themes/887
+Link: https://themes.shopify.com/themes/dawn
 ```
 
 ## Technologies Used
