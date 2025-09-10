@@ -148,7 +148,7 @@ const themeSuggestions = {
   'Theme not detected': ['Dawn', 'Sense', 'Craft', 'Impulse', 'Local'],
 };
 
-// Platform detection signatures
+// Platform detection signatures with Font Awesome icons
 const platformSignatures = {
   'WordPress': {
     patterns: [
@@ -161,7 +161,7 @@ const platformSignatures = {
     ],
     metaTags: ['generator'],
     scripts: ['wp-embed', 'wp-includes'],
-    icon: '🔧'
+    icon: '<i class="fab fa-wordpress"></i>'
   },
   'WooCommerce': {
     patterns: [
@@ -171,7 +171,7 @@ const platformSignatures = {
       /woocommerce_cart_hash/i
     ],
     scripts: ['woocommerce', 'wc-cart-fragments'],
-    icon: '🛒'
+    icon: '<i class="fas fa-shopping-cart"></i>'
   },
   'Magento': {
     patterns: [
@@ -182,7 +182,7 @@ const platformSignatures = {
       /Mage\.Data/i
     ],
     scripts: ['mage', 'prototype'],
-    icon: '🏪'
+    icon: '<i class="fas fa-store"></i>'
   },
   'Wix': {
     patterns: [
@@ -192,7 +192,7 @@ const platformSignatures = {
       /wix-code/i
     ],
     scripts: ['wix-viewer', 'wix-code'],
-    icon: '🎨'
+    icon: '<i class="fas fa-palette"></i>'
   },
   'Webflow': {
     patterns: [
@@ -202,7 +202,7 @@ const platformSignatures = {
       /data-wf/i
     ],
     scripts: ['webflow.js', 'fs-attributes'],
-    icon: '🌐'
+    icon: '<i class="fas fa-globe"></i>'
   },
   'Go High Level': {
     patterns: [
@@ -212,7 +212,7 @@ const platformSignatures = {
       /location\.iframe/i
     ],
     scripts: ['highlevel', 'gohighlevel'],
-    icon: '📈'
+    icon: '<i class="fas fa-chart-line"></i>'
   },
   'Squarespace': {
     patterns: [
@@ -222,7 +222,7 @@ const platformSignatures = {
       /squarespace-static/i
     ],
     scripts: ['squarespace'],
-    icon: '▫️'
+    icon: '<i class="fas fa-th-large"></i>'
   },
   'BigCommerce': {
     patterns: [
@@ -232,7 +232,7 @@ const platformSignatures = {
       /bcapp/i
     ],
     scripts: ['bigcommerce', 'stencil'],
-    icon: '🛍️'
+    icon: '<i class="fas fa-shopping-bag"></i>'
   },
   'Shopify': {
     patterns: [
@@ -242,7 +242,7 @@ const platformSignatures = {
       /myshopify\.com/i
     ],
     scripts: ['shopify'],
-    icon: '🛒'
+    icon: '<i class="fas fa-shopping-cart"></i>'
   },
   'Drupal': {
     patterns: [
@@ -252,7 +252,7 @@ const platformSignatures = {
       /sites\/all/i
     ],
     scripts: ['drupal.js'],
-    icon: '🌱'
+    icon: '<i class="fas fa-leaf"></i>'
   },
   'Joomla': {
     patterns: [
@@ -262,7 +262,7 @@ const platformSignatures = {
       /mod_menu/i
     ],
     scripts: ['joomla'],
-    icon: '📰'
+    icon: '<i class="fas fa-newspaper"></i>'
   },
   'PrestaShop': {
     patterns: [
@@ -272,7 +272,7 @@ const platformSignatures = {
       /blockcart/i
     ],
     scripts: ['prestashop'],
-    icon: '🛒'
+    icon: '<i class="fas fa-shopping-cart"></i>'
   },
   'OpenCart': {
     patterns: [
@@ -281,7 +281,7 @@ const platformSignatures = {
       /catalog\/view/i
     ],
     scripts: ['opencart'],
-    icon: '🛒'
+    icon: '<i class="fas fa-shopping-cart"></i>'
   },
   'PHP': {
     patterns: [
@@ -291,7 +291,7 @@ const platformSignatures = {
       /PHPSESSID/i
     ],
     headers: ['X-Powered-By'],
-    icon: '🐘'
+    icon: '<i class="fab fa-php"></i>'
   },
   'React': {
     patterns: [
@@ -301,7 +301,7 @@ const platformSignatures = {
       /__NEXT__/i
     ],
     scripts: ['react', '_next'],
-    icon: '⚛️'
+    icon: '<i class="fab fa-react"></i>'
   },
   'Vue.js': {
     patterns: [
@@ -310,7 +310,7 @@ const platformSignatures = {
       /v-.*=/i
     ],
     scripts: ['vue', 'nuxt'],
-    icon: '💚'
+    icon: '<i class="fab fa-vuejs"></i>'
   },
   'Angular': {
     patterns: [
@@ -319,7 +319,7 @@ const platformSignatures = {
       /ng-controller/i
     ],
     scripts: ['angular'],
-    icon: '🅰️'
+    icon: '<i class="fab fa-angular"></i>'
   }
 };
 

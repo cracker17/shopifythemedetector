@@ -260,7 +260,10 @@ export default function Home() {
               {platform && platform.name !== 'Unknown' && platform.name !== 'Shopify' && (
                 <div className={styles.platformWarning}>
                   <div className={styles.platformContent}>
-                    <span className={styles.platformIcon}>{platform.icon}</span>
+                    <span
+                      className={styles.platformIcon}
+                      dangerouslySetInnerHTML={{ __html: platform.icon }}
+                    />
                     <span className={styles.platformText}>
                       This website uses a <strong>{platform.name}</strong> platform
                     </span>
