@@ -106,15 +106,27 @@ Response:
 
 ## Enhanced Detection Capabilities
 
-### Detection Priority Order
-1. **Primary**: `Shopify.theme` object (most reliable)
-   - Extracts `name` → Theme Name
+### Detection Priority Order (Schema-First Approach)
+1. **Primary**: `schema_name` (most accurate)
+   - Direct extraction from theme's `settings_schema.json`
+   - Most reliable for identifying the actual theme name
+   - `schema_name["']?\s*:\s*["']([^"']+)["']`
+
+2. **Secondary**: `Shopify.theme` object (fallback)
+   - Extracts `name` → Theme Name from JavaScript object
    - Extracts `theme_store_id` → Direct link to Theme Store
-2. **Secondary**: `schema_name` and `schema_version` (fallbacks)
-   - `schema_name` → Alternative theme name source
-   - `schema_version` → Theme version number
+   - Used when schema_name is not available
+
 3. **Tertiary**: `data-theme-name` and `data-theme-version` (last resort)
    - Scans `<html>` and `<body>` tags for data attributes
+   - `data-theme-name=["']([^"']+)["']`
+   - `data-theme-version=["']([^"']+)["']`
+
+### Why Schema-First Approach?
+- **Higher Accuracy**: `schema_name` comes directly from the theme's configuration
+- **Consistency**: Less likely to be modified by store customizations
+- **Reliability**: Present in all properly structured Shopify themes
+- **Version Info**: `schema_version` provides accurate version information
 
 ### Advanced Pattern Matching
 - **Schema Detection**: `schema_name["']?\s*:\s*["']([^"']+)["']`
@@ -135,22 +147,28 @@ function detectThemeData(html) {
   let themeStoreId = null;
   let themeVersion = null;
 
-  // Primary: Shopify.theme object
-  const shopifyMatch = html.match(/Shopify\.theme\s*=\s*{[^}]*"name"\s*:\s*"([^"]+)"[^}]*"theme_store_id"\s*:\s*(\d+)/);
-  if (shopifyMatch) {
-    themeName = shopifyMatch[1];
-    themeStoreId = shopifyMatch[2];
+  // Primary: schema_name (most accurate)
+  const schemaNameMatch = html.match(/schema_name["']?\s*:\s*["']([^"']+)["']/);
+  if (schemaNameMatch) {
+    themeName = schemaNameMatch[1];
   }
 
-  // Secondary: schema_name / schema_version
+  // Secondary: Shopify.theme object (fallback)
   if (!themeName) {
-    const schemaNameMatch = html.match(/schema_name["']?\s*:\s*["']([^"']+)["']/);
-    if (schemaNameMatch) themeName = schemaNameMatch[1];
+    const shopifyMatch = html.match(/Shopify\.theme\s*=\s*{[^}]*"name"\s*:\s*"([^"]+)"[^}]*"theme_store_id"\s*:\s*(\d+)/);
+    if (shopifyMatch) {
+      themeName = shopifyMatch[1];
+      themeStoreId = shopifyMatch[2];
+    }
   }
-  const schemaVersionMatch = html.match(/schema_version["']?\s*:\s*["']([^"']+)["']/);
-  if (schemaVersionMatch) themeVersion = schemaVersionMatch[1];
 
-  // Attribute-based: data-theme-name / data-theme-version
+  // Version detection (can be combined with any method)
+  const schemaVersionMatch = html.match(/schema_version["']?\s*:\s*["']([^"']+)["']/);
+  if (schemaVersionMatch) {
+    themeVersion = schemaVersionMatch[1];
+  }
+
+  // Tertiary: data attributes (last resort)
   if (!themeName) {
     const dataNameMatch = html.match(/data-theme-name=["']([^"']+)["']/);
     if (dataNameMatch) themeName = dataNameMatch[1];

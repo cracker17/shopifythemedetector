@@ -289,10 +289,17 @@ export async function POST(request) {
     // Initialize theme version
     let themeVersion = null;
 
-    // Enhanced Detection Logic with Priority Order
+    // Enhanced Detection Logic with Priority Order (Schema-first approach)
 
-    // 1. PRIMARY DETECTION: Shopify.theme object (most reliable)
-    if (themeObj) {
+    // 1. PRIMARY DETECTION: schema_name (most accurate for theme identification)
+    const schemaNameMatch = html.match(/schema_name["']?\s*:\s*["']([^"']+)["']/);
+    if (schemaNameMatch) {
+      themeName = schemaNameMatch[1];
+      console.log('🎯 Primary Detection (schema_name):', themeName);
+    }
+
+    // 2. SECONDARY DETECTION: Shopify.theme object (fallback)
+    if (!themeName && themeObj) {
       if (themeObj.name) {
         themeName = themeObj.name;
       }
@@ -307,30 +314,18 @@ export async function POST(request) {
         themeVersion = themeObj.version;
       }
 
-      console.log('✅ Primary Detection (Shopify.theme):', {
+      console.log('📦 Secondary Detection (Shopify.theme):', {
         name: themeName,
         themeStoreId,
         version: themeVersion
       });
     }
 
-    // 2. SECONDARY DETECTION: schema_name and schema_version (fallbacks)
-    if (!themeName) {
-      // Look for schema_name
-      const schemaNameMatch = html.match(/schema_name["']?\s*:\s*["']([^"']+)["']/);
-      if (schemaNameMatch) {
-        themeName = schemaNameMatch[1];
-        console.log('📋 Secondary Detection (schema_name):', themeName);
-      }
-    }
-
     // Look for schema_version (can be combined with any detection method)
-    if (!themeVersion) {
-      const schemaVersionMatch = html.match(/schema_version["']?\s*:\s*["']([^"']+)["']/);
-      if (schemaVersionMatch) {
-        themeVersion = schemaVersionMatch[1];
-        console.log('📋 Secondary Detection (schema_version):', themeVersion);
-      }
+    const schemaVersionMatch = html.match(/schema_version["']?\s*:\s*["']([^"']+)["']/);
+    if (schemaVersionMatch) {
+      themeVersion = schemaVersionMatch[1];
+      console.log('📋 Schema Version Detected:', themeVersion);
     }
 
     // 3. TERTIARY DETECTION: data attributes (last resort)
