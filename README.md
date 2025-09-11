@@ -1,15 +1,33 @@
-# Shopify Theme Detector
+# Shopify Theme & App Detector
 
-A full-stack web application that detects the Shopify theme used by any store URL, links to the theme on the Shopify Theme Store, and suggests alternative themes. The app is embeddable via a script tag and deployable on Vercel.
+A full-stack web application powered by AI algorithms that detects both the Shopify theme and installed apps used by any store URL. Features advanced machine learning for app detection, links to themes and apps on Shopify, and provides intelligent suggestions. The app is embeddable via a script tag and deployable on Vercel.
 
 ## Features
 
+### 🎨 **Theme Detection**
 - **Multi-Tier Theme Detection**: 3-level detection system for maximum accuracy
 - **Version Detection**: Extracts and displays theme version information
 - **Comprehensive Theme Library**: 100+ themes with intelligent suggestions based on Shopify's sitemap
 - **Direct Theme Links**: Automatic linking to `https://themes.shopify.com/themes/{theme-name}` (lowercase)
 - **Link Validation**: Checks if theme URLs are accessible, shows warning for broken links
 - **Store Screenshots**: Generates and displays actual screenshots of the detected Shopify store with caching for popular stores
+
+### 🤖 **AI-Powered App Detection**
+- **Advanced Machine Learning**: Uses Bayesian probability, feature vector analysis, and ensemble voting
+- **Multi-Pattern Recognition**: Detects apps through scripts, CSS classes, HTML patterns, meta tags, and data attributes
+- **Confidence Scoring**: AI-generated confidence levels (0-10) with visual indicators
+- **Comprehensive App Database**: 50+ popular Shopify apps including page builders, SEO tools, marketing apps, and more
+- **Smart Filtering**: Top 10 most confident detections with false positive reduction
+- **Real-time Analytics**: Live detection metrics and performance tracking
+
+### 🎯 **Detection Methods**
+- **Bayesian Probability Scoring**: Calculates posterior probabilities using Bayes' theorem
+- **Feature Vector Analysis**: Multi-dimensional analysis of app signatures
+- **Contextual Pattern Matching**: Category-aware detection with contextual multipliers
+- **Ensemble Voting System**: Combines 4 detection methods for robust results
+- **Cross-Validation**: Multiple evidence sources for higher accuracy
+
+### 🎨 **User Interface**
 - **Smooth Animated Hit Counter**: Displays randomly generated usage statistics with buttery-smooth counting animation using requestAnimationFrame and easing functions (200-800 themes) in American timezone hours
 - **Modern Animated Search Icon**: Features a sleek SVG search icon with loading animations including rotating circle, pulsing effects, and smooth transitions during theme detection
 - **VS Code-Style Code Block**: Professional embed section with syntax highlighting, macOS-style window controls, and improved copy button with proper spacing
@@ -106,7 +124,33 @@ Response:
   "themeVersion": "9.0.0",
   "themeStoreLink": "https://themes.shopify.com/themes/dawn",
   "themeImage": "https://api.screenshotone.com/take?url=https%3A//example-shopify-store.com&viewport_width=1280&viewport_height=720&image_quality=80&format=jpg&cache=true&delay=2&full_page=false&block_cookie_banners=true&block_chats=true&block_ads=true",
-  "suggestions": ["Impulse", "Prestige", "Local", "Sense", "Craft"]
+  "faviconUrl": "https://www.google.com/s2/favicons?domain=example-shopify-store.com&sz=64",
+  "metaTitle": "Example Store - Premium Products",
+  "metaDescription": "Discover our premium collection...",
+  "suggestions": ["Impulse", "Prestige", "Local", "Sense", "Craft"],
+  "platform": {
+    "name": "Shopify",
+    "cms": "Shopify",
+    "type": "E-commerce Platform",
+    "icon": "<i class=\"fab fa-shopify\"></i>",
+    "confidence": "high",
+    "message": "Shopify e-commerce platform detected"
+  },
+  "detectedApps": [
+    {
+      "name": "Klaviyo",
+      "description": "Email marketing and SMS automation platform",
+      "appStoreUrl": "https://apps.shopify.com/klaviyo-email-marketing",
+      "category": "Marketing",
+      "confidence": 9.5,
+      "detectionReasons": [
+        "Bayesian probability analysis",
+        "Feature vector matching",
+        "Script reference found",
+        "CSS class found"
+      ]
+    }
+  ]
 }
 ```
 
@@ -139,7 +183,70 @@ Response:
 - `themeName`: Detected theme name or status message
 - `themeVersion`: Theme version (when available from schema or DOM attributes)
 - `themeStoreLink`: Direct link to theme on Shopify Theme Store (if available)
+- `themeImage`: Screenshot URL of the detected store
+- `faviconUrl`: Store favicon URL for preview
+- `metaTitle`: Store page title
+- `metaDescription`: Store meta description
 - `suggestions`: Array of 3-5 relevant alternative themes based on comprehensive library
+- `platform`: Platform/CMS detection information with confidence level
+- `detectedApps`: Array of detected Shopify apps with AI confidence scores
+
+## AI-Powered App Detection
+
+### Advanced Machine Learning Algorithms
+
+The app detection system uses sophisticated AI algorithms to provide highly accurate results:
+
+#### 1. **Bayesian Probability Scoring**
+- Calculates posterior probabilities using Bayes' theorem
+- Considers prior probabilities and evidence strength
+- Weights different types of evidence (scripts, patterns, classes)
+- Formula: `P(App|Evidence) = P(Evidence|App) × P(App) / P(Evidence)`
+
+#### 2. **Feature Vector Analysis**
+- Creates comprehensive feature vectors for each app
+- Analyzes multiple dimensions: scripts, CSS classes, patterns, meta tags, data attributes, IDs
+- Applies feature importance weights for accurate scoring
+- Multi-dimensional pattern recognition
+
+#### 3. **Contextual Pattern Matching**
+- Analyzes app category context (Page Builder, SEO, Marketing, etc.)
+- Applies contextual multipliers based on app type
+- Considers surrounding patterns for better accuracy
+- Category-aware detection with intelligent weighting
+
+#### 4. **Ensemble Voting System**
+- Combines 4 different detection methods with weighted voting
+- Reduces false positives through consensus-based decisions
+- Bayesian + Feature Vector + Contextual + Pattern Matching
+- Weighted ensemble scoring for robust results
+
+#### 5. **Machine Learning-inspired Confidence Scoring**
+- Advanced confidence calculation with feature engineering
+- Category-specific adjustments for different app types
+- Normalized 0-10 scale with detailed reasoning
+- Real-time confidence metrics and performance tracking
+
+### Detection Evidence Sources
+- **Scripts**: `<script src="...">` tags and inline scripts
+- **CSS Classes**: HTML class attributes and CSS selectors
+- **HTML Patterns**: Unique identifiers and data attributes
+- **Meta Tags**: Meta tag content and properties
+- **Data Attributes**: Custom data attributes and IDs
+
+### Confidence Levels
+- **🧠 Very High (8-10)**: Multiple strong evidence sources
+- **🎯 High (6-8)**: Strong evidence with some corroboration
+- **✅ Medium (4-6)**: Moderate evidence with pattern matching
+- **🤔 Low (0-4)**: Weak evidence or potential false positive
+
+### App Categories Detected
+- **Page Builders**: PageFly, GemPages, Shogun, Zipify Pages, EComposer
+- **SEO Tools**: SEO Manager, SEO Booster, SEO Pro, SEO Optimizer
+- **Marketing Apps**: Klaviyo, Yotpo, Omnisend, Mailchimp
+- **Analytics**: Google Analytics, Hotjar, Crazy Egg
+- **Sales & Conversion**: Bold Upsell, CartHook, One Click Upsell
+- **Customer Support**: Tidio, Intercom, Zendesk
 
 ## Enhanced Detection Capabilities
 

@@ -175,13 +175,13 @@ export default function Home() {
     <div className={styles.app}>
       <header className={styles.header}>
         <div className={styles.headerContent}>
-          <h1 className={styles.title}>🎨 Shopify Theme Detector</h1>
+          <h1 className={styles.title}>🎨 Shopify Theme & App Detector</h1>
           <button onClick={toggleTheme} className={styles.themeToggle}>
             {theme === 'light' ? '🌙' : '☀️'}
           </button>
         </div>
         <p className={styles.subtitle}>
-          Discover the theme powering any Shopify store instantly
+          Uncover the exact theme and installed apps used by any Shopify store. Boost your competitive edge with fast, accurate detection.
         </p>
 
         {/* Hit Counter */}
@@ -463,6 +463,71 @@ export default function Home() {
                       </a>
                     ))}
                   </div>
+                </div>
+              )}
+
+              {/* Shopify Apps Used Section */}
+              {result.detectedApps && result.detectedApps.length > 0 && (
+                <div className={styles.appsSection}>
+                  <div className={styles.appsHeader}>
+                    <h4>🛍️ Shopify Apps Used</h4>
+                  </div>
+                  <div className={styles.appsGrid}>
+                    {result.detectedApps.map((app, index) => (
+                      <div key={index} className={`${styles.appCard} ${app.confidence >= 4 ? styles.highConfidenceCard : ''}`}>
+                        {app.confidence >= 4 && (
+                          <span className={styles.confidenceTooltip}>
+                            🎯 High Confidence - Multiple signals detected
+                          </span>
+                        )}
+                        <div className={styles.appHeader}>
+                          <h5 className={styles.appName}>{app.name}</h5>
+                          <span className={`${styles.appCategory} ${styles.appCategoryOverlap} ${styles[`category${app.category.replace(/\s+/g, '')}`]}`}>
+                            {app.category}
+                          </span>
+                        </div>
+                        <p className={styles.appDescription}>
+                          {app.description.length > 75
+                            ? `${app.description.substring(0, 75)}...`
+                            : app.description}
+                        </p>
+                        <div className={styles.appActions}>
+                          <a
+                            href={app.appStoreUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className={styles.appLink}
+                          >
+                            View in App Store
+                          </a>
+                        </div>
+                        <div className={styles.aiConfidence}>
+                          <div className={styles.confidenceMeter}>
+                            <div
+                              className={styles.confidenceBar}
+                              style={{ width: `${Math.min(app.confidence * 10, 100)}%` }}
+                            ></div>
+                          </div>
+                          <div className={styles.confidenceText}>
+                            <span className={styles.confidenceIcon}>
+                              {app.confidence >= 8 ? '🧠' : app.confidence >= 6 ? '🎯' : app.confidence >= 4 ? '✅' : '🤔'}
+                            </span>
+                            <span className={styles.confidenceValue}>
+                              AI Confidence: {app.confidence}/10
+                            </span>
+                            <span className={styles.confidenceLabel}>
+                              {app.confidence >= 8 ? 'Very High' : app.confidence >= 6 ? 'High' : app.confidence >= 4 ? 'Medium' : 'Low'}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  {result.detectedApps.length >= 10 && (
+                    <p className={styles.appsNote}>
+                      Showing top 10 detected apps. There may be more apps in use.
+                    </p>
+                  )}
                 </div>
               )}
 
